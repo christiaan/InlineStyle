@@ -12,14 +12,11 @@ Usage
 First include both InlineStyle.php and CSSQuery.php.
 Then create a new InlineStyle object from either a HTML string or HTML file.
 
-    $htmldoc = new InlineStyle("testfiles/test.html", "testfiles");
+    $htmldoc = new InlineStyle("testfiles/test.html");
 
 or
 
-    $htmldoc = new InlineStyle(file_get_contents("http://github.com"), "http://github.com");
-
-The second param is the base url that is used to parse the links to external
-stylesheets.
+    $htmldoc = new InlineStyle(file_get_contents("http://github.com"));
 
 ### Apply the embedded and external stylesheets
 
@@ -27,6 +24,11 @@ First we'll have to extract the stylesheets from the document and then we have
 to apply them.
 
     $htmldoc->applyStylesheet($htmldoc->extractStylesheets());
+
+The second param is the base url that is used to parse the links to external
+stylesheets.
+
+    $htmldoc->applyStylesheet($htmldoc->extractStylesheets(null, "http://github.com"));
 
 ### Applying additional stylesheets
 
