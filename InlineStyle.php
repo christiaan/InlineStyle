@@ -173,6 +173,7 @@ class InlineStyle
 	 */
 	public function parseStylesheet($stylesheet) {
 		$parsed = array();
+		$stylesheet = $this->_stripStylesheet($stylesheet);
 		$stylesheet = trim(trim($stylesheet), "}");
 		foreach(explode("}", $stylesheet) as $rule) {
 			list($selector, $style) = explode("{", $rule, 2);
@@ -215,5 +216,15 @@ class InlineStyle
 			}
 		}
 		return $styleA;
+	}
+	
+	protected function _stripStylesheet($s)
+	{
+		$s = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!','', $s);
+		$s = str_replace(array("\r\n","\r","\n","\t",'  ','    ','    '),'',$s);
+		$s = str_replace('{ ', '{', $s);
+		$s = str_replace(' }', '}', $s);
+		$s = str_replace('; ', ';', $s);
+		return $s;
 	}
 }
