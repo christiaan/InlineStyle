@@ -60,13 +60,15 @@ class InlineStyleTest extends PHPUnit_Framework_TestCase
 'p{
 	margin:0;
 	padding:0 0 10px 0;
+	background-image: url("someimage.jpg");
 }
 a:hover{
 	color:Red;
 }
 p:hover{
 	color:blue;
-}',
+}
+',
 '
 			h1{
 				color:yellow
@@ -80,6 +82,15 @@ p:hover{
 		',
 ));
     }
+
+	public function testApplyExtractedStylesheet()
+	{
+		$stylesheets = $this->object->extractStylesheets(null, "testfiles");
+		$this->object->applyStylesheet($stylesheets);
+
+		$this->assertEquals($this->object->getHTML(),
+			file_get_contents("testfiles/testApplyExtractedStylesheet.html"));
+	}
 
     public function testParseStyleSheet()
     {
