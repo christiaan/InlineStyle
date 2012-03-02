@@ -46,13 +46,13 @@ class InlineStyle
 	 * 
 	 * @param string $html
 	 */
-	public function __construct($html) {
+	public function __construct($html, $encoding = 'UTF-8') {
 		if(!class_exists("CSSQuery")) {
 			throw new Exception(
 				"InlineStyle needs the CSSQuery class");
 		}
 		
-		$html = (string) $html;
+		$html = htmlspecialchars_decode(htmlentities((string) $html, ENT_NOQUOTES, $encoding), ENT_NOQUOTES);
 		$this->_dom = new DOMDocument();
 		if(file_exists($html)) {
 			$this->_dom->loadHTMLFile($html);
