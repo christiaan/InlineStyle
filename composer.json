@@ -2,17 +2,28 @@
     "name": "rodchyn/html-inline-style",
     "type": "library",
     "description": "Inline HTML styles",
-    "keywords": ["html", "inline", "style"],
+    "keywords": [
+        "html",
+        "inline",
+        "style"
+    ],
     "homepage": "https://github.com/rodchyn/InlineStyle",
     "license": "MIT",
     "authors": [
-        {"name": "Yura Rodchyn", "email": "rodchyn@gmail.com"},
-	{"name": "Christiaan Baartse" }
+        {
+            "name": "Yura Rodchyn",
+            "email": "rodchyn@gmail.com"
+        },
+        {
+            "name": "Christiaan Baartse"
+        }
     ],
     "require": {
         "php": ">=5.3.2"
     },
     "autoload": {
-        "classmap": ["."]
+        "classmap": [
+            "."
+        ]
     }
 }
