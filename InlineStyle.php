@@ -23,11 +23,12 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+
+namespace InlineStyler;
+
 /**
  * Parses a html file and applies all embedded and external stylesheets inline
- *
- * @author Christiaan Baartse <christiaan@baartse.nl>
- * @copyright 2010 Christiaan Baartse
  */
 class InlineStyle
 {
@@ -46,21 +47,22 @@ class InlineStyle
      *
      * @param string $html
      */
-    public function __construct($html, $encoding = 'UTF-8') {
+    public function __construct($html, $encoding = 'UTF-8')
+    {
         if(!class_exists("CSSQuery")) {
-            throw new Exception(
+            throw new \Exception(
                 "InlineStyle needs the CSSQuery class");
         }
 
         $html = htmlspecialchars_decode(htmlentities((string) $html, ENT_NOQUOTES, $encoding), ENT_NOQUOTES);
-        $this->_dom = new DOMDocument();
+        $this->_dom = new \DOMDocument();
         if(file_exists($html)) {
             $this->_dom->loadHTMLFile($html);
         }
         else {
             $this->_dom->loadHTML($html);
         }
-        $this->_cssquery = new CSSQuery($this->_dom);
+        $this->_cssquery = new \CSSQuery($this->_dom);
     }
 
     /**
@@ -69,7 +71,8 @@ class InlineStyle
      * @param string $stylesheet
      * @return InlineStyle self
      */
-    public function applyStylesheet($stylesheet) {
+    public function applyStylesheet($stylesheet)
+    {
         $stylesheet = (array) $stylesheet;
         foreach($stylesheet as $ss) {
             foreach($this->parseStylesheet($ss) as $arr) {
@@ -86,7 +89,8 @@ class InlineStyle
      * @param string $style
      * @return InlineStyle self
      */
-    public function applyRule($selector, $style) {
+    public function applyRule($selector, $style)
+    {
         $selector = trim(trim($selector), ",");
         if($selector) {
             $nodes = array();
@@ -192,7 +196,8 @@ class InlineStyle
      * @param string $stylesheet
      * @return array
      */
-    public function parseStylesheet($stylesheet) {
+    public function parseStylesheet($stylesheet)
+    {
         $parsed = array();
         $stylesheet = $this->_stripStylesheet($stylesheet);
         $stylesheet = trim(trim($stylesheet), "}");
@@ -209,7 +214,8 @@ class InlineStyle
      * @param string $style
      * @return array
      */
-    protected function _styleToArray($style) {
+    protected function _styleToArray($style)
+    {
         $styles = array();
         $style = trim(trim($style), ";");
         if($style) {
@@ -229,7 +235,8 @@ class InlineStyle
      * @param array $styleB
      * @return array
      */
-    protected function _mergeStyles(array $styleA, array $styleB) {
+    protected function _mergeStyles(array $styleA, array $styleB)
+    {
         foreach($styleB as $prop => $val) {
             if(!isset($styleA[$prop]) ||
             substr(str_replace(" ", "", strtolower($styleA[$prop])), -10) !==
