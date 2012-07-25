@@ -27,6 +27,8 @@
 
 namespace InlineStyler;
 
+use Symfony\Component\CssSelector\CssSelector;
+
 /**
  * Parses a html file and applies all embedded and external stylesheets inline
  */
@@ -38,22 +40,12 @@ class InlineStyle
     protected $_dom;
 
     /**
-     * @var CSSQuery instance to use css based selectors on our DOMDocument
-     */
-    protected $_cssquery;
-
-    /**
      * Prepare all the necessary objects
      *
      * @param string $html
      */
     public function __construct($html)
     {
-        if(!class_exists("CSSQuery")) {
-            throw new \Exception(
-                "InlineStyle needs the CSSQuery class");
-        }
-
         $this->_dom = new \DOMDocument();
         $this->_dom->formatOutput = true;
 
@@ -63,7 +55,6 @@ class InlineStyle
         else {
             $this->_dom->loadHTML($html);
         }
-        $this->_cssquery = new \CSSQuery($this->_dom);
     }
 
     /**
@@ -84,6 +75,18 @@ class InlineStyle
         return $this;
     }
 
+    private function _getNodesForCssSelector($sel)
+    {
+        try {
+            $xpathQuery = CssSelector::toXPath($sel);
+            $xpath = new \DOMXPath($this->_dom);
+            return $xpath->query($xpathQuery);
+        }
+        catch(\Exception $e) {}
+
+        return array();
+    }
+
     /**
      * Applies a style rule on the document
      * @param string $selector
@@ -94,14 +97,8 @@ class InlineStyle
     {
         $selector = trim(trim($selector), ",");
         if($selector) {
-            $nodes = array();
-            foreach(explode(",", $selector) as $sel) {
-                if(false === stripos($sel, ":hover") &&
-                false === stripos($sel, ":active") &&
-                false === stripos($sel, ":visited")) {
-                    $nodes = array_merge($nodes, $this->_cssquery->query($sel));
-                }
-            }
+            $nodes = $this->_getNodesForCssSelector($selector);
+
             $style = $this->_styleToArray($style);
             foreach($nodes as $node) {
                 $current = $node->hasAttribute("style") ?
