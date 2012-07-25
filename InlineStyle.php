@@ -167,6 +167,27 @@ class InlineStyle
 	}
 	
 	/**
+	 * Extracts the stylesheet nodes nodes specified by the xpath
+	 *
+	 * @param DOMNode $node leave empty to extract from the whole document
+	 * @return array the extracted stylesheets
+	 */
+	public function extractStylesheetsWithXpath($xpathQuery)
+	{
+		$stylesheets = array();
+
+		$xpath = new \DOMXPath($this->_dom);
+		$nodes = $xpath->query($xpathQuery);
+		foreach ($nodes as $node)
+		{
+			$stylesheets[] = $node->nodeValue;
+			$node->parentNode->removeChild($node);
+		}
+
+		return $stylesheets;
+	}
+
+	/**
 	 * Parses a stylesheet to selectors and properties
 	 * @param string $stylesheet
 	 * @return array
