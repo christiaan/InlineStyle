@@ -37,22 +37,25 @@ class InlineStyleTest extends \PHPUnit_Framework_TestCase
 
     public function testGetHTML()
     {
-        $this->assertEquals($this->object->getHTML(),
-            file_get_contents($this->basedir."/testGetHTML.html"));
+        $this->assertEquals(
+            file_get_contents($this->basedir."/testGetHTML.html"),
+            $this->object->getHTML());
     }
 
     public function testApplyStyleSheet()
     {
         $this->object->applyStyleSheet("p:not(.p2) { color: red }");
-        $this->assertEquals($this->object->getHTML(),
-            file_get_contents($this->basedir."/testApplyStylesheet.html"));
+        $this->assertEquals(
+            file_get_contents($this->basedir."/testApplyStylesheet.html"),
+            $this->object->getHTML());
     }
 
     public function testApplyRule()
     {
         $this->object->applyRule("p:not(.p2)", "color: red");
-        $this->assertEquals($this->object->getHTML(),
-            file_get_contents($this->basedir."/testApplyStylesheet.html"));
+        $this->assertEquals(
+            file_get_contents($this->basedir."/testApplyStylesheet.html"),
+            $this->object->getHTML());
     }
 
     public function testExtractStylesheets()
@@ -83,7 +86,7 @@ p:hover{
     }
 ',
 );
-        $this->assertEquals($stylesheets, $expected);
+        $this->assertEquals($expected, $stylesheets);
     }
 
     public function testApplyExtractedStylesheet()
@@ -91,13 +94,22 @@ p:hover{
         $stylesheets = $this->object->extractStylesheets(null, $this->basedir);
         $this->object->applyStylesheet($stylesheets);
 
-        $this->assertEquals($this->object->getHTML(),
-            file_get_contents($this->basedir."/testApplyExtractedStylesheet.html"));
+        $this->assertEquals(
+            file_get_contents($this->basedir."/testApplyExtractedStylesheet.html"),
+            $this->object->getHTML());
     }
 
     public function testParseStyleSheet()
     {
         $parsed = $this->object->parseStylesheet("p:not(.p2) { color: red }");
-        $this->assertEquals($parsed, array(array("p:not(.p2)", "color: red")));
+        $this->assertEquals(
+            array(array("p:not(.p2)", "color: red")),
+            $parsed);
+    }
+
+    public function testIllegalXmlUtf8Chars()
+    {
+        // check an exception is not thrown when loading up illegal XML UTF8 chars
+        new InlineStyle("<html><body>".chr(2).chr(3).chr(4).chr(5)."</body></html>");
     }
 }

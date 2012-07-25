@@ -28,6 +28,7 @@
 namespace InlineStyler;
 
 use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\Exception\ParseException;
 
 /**
  * Parses a html file and applies all embedded and external stylesheets inline
@@ -37,24 +38,50 @@ class InlineStyle
     /**
      * @var DOMDocument the HTML as DOMDocument
      */
-    protected $_dom;
+    private $_dom;
+    private $_dom_xpath;
 
     /**
      * Prepare all the necessary objects
      *
      * @param string $html
      */
-    public function __construct($html)
+    public function __construct($html="")
+    {
+        if ($html) {
+            if (file_exists($html))
+                $this->loadHTMLFile($html);
+            else
+                $this->loadHTML($html);
+        }
+    }
+
+    /**
+     * Load HTML file
+     *
+     * @param string $filename
+     */
+    public function loadHTMLFile($filename)
+    {
+        $this->loadHTML(file_get_contents($filename));
+    }
+
+    /**
+     * Load HTML string
+     *
+     * @param string $html
+     */
+    public function loadHTML($html)
     {
         $this->_dom = new \DOMDocument();
         $this->_dom->formatOutput = true;
 
-        if(file_exists($html)) {
-            $this->_dom->loadHTMLFile($html);
-        }
-        else {
-            $this->_dom->loadHTML($html);
-        }
+        // strip illegal XML UTF-8 chars
+        // remove all control characters except CR, LF and tab
+        $html = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $html); // 00-09, 11-31, 127
+
+        $this->_dom->loadHTML($html);
+        $this->_dom_xpath = new \DOMXPath($this->_dom);
     }
 
     /**
@@ -79,10 +106,11 @@ class InlineStyle
     {
         try {
             $xpathQuery = CssSelector::toXPath($sel);
-            $xpath = new \DOMXPath($this->_dom);
-            return $xpath->query($xpathQuery);
+            return $this->_dom_xpath->query($xpathQuery);
         }
-        catch(\Exception $e) {}
+        catch(ParseException $e) {
+            // ignore css rule parse errors
+        }
 
         return array();
     }
@@ -95,7 +123,6 @@ class InlineStyle
      */
     public function applyRule($selector, $style)
     {
-        $selector = trim(trim($selector), ",");
         if($selector) {
             $nodes = $this->_getNodesForCssSelector($selector);
 
@@ -104,7 +131,6 @@ class InlineStyle
                 $current = $node->hasAttribute("style") ?
                     $this->_styleToArray($node->getAttribute("style")) :
                     array();
-
 
                 $current = $this->_mergeStyles($current, $style);
                 $st = array();
@@ -178,8 +204,7 @@ class InlineStyle
     {
         $stylesheets = array();
 
-        $xpath = new \DOMXPath($this->_dom);
-        $nodes = $xpath->query($xpathQuery);
+        $nodes = $this->_dom_xpath->query($xpathQuery);
         foreach ($nodes as $node)
         {
             $stylesheets[] = $node->nodeValue;
@@ -212,7 +237,7 @@ class InlineStyle
      * @param string $style
      * @return array
      */
-    protected function _styleToArray($style)
+    private function _styleToArray($style)
     {
         $styles = array();
         $style = trim(trim($style), ";");
@@ -233,19 +258,19 @@ class InlineStyle
      * @param array $styleB
      * @return array
      */
-    protected function _mergeStyles(array $styleA, array $styleB)
+    private function _mergeStyles(array $styleA, array $styleB)
     {
         foreach($styleB as $prop => $val) {
-            if(!isset($styleA[$prop]) ||
-            substr(str_replace(" ", "", strtolower($styleA[$prop])), -10) !==
-            "!important") {
-                    $styleA[$prop] = $val;
+            if(!isset($styleA[$prop])
+                || substr(str_replace(" ", "", strtolower($styleA[$prop])), -10) !== "!important")
+            {
+                $styleA[$prop] = $val;
             }
         }
         return $styleA;
     }
 
-    protected function _stripStylesheet($s)
+    private function _stripStylesheet($s)
     {
         $s = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!','', $s);
         $s = str_replace(array("\r\n","\r","\n","\t",'  ','    ','    '),'',$s);
