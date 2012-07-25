@@ -14,6 +14,7 @@ class InlineStyleTest extends \PHPUnit_Framework_TestCase
      * @var InlineStyle
      */
     protected $object;
+    protected $basedir;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -21,7 +22,8 @@ class InlineStyleTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new InlineStyle(__DIR__."/testfiles/test.html");
+        $this->basedir = __DIR__."/testfiles";
+        $this->object = new InlineStyle($this->basedir."/test.html");
     }
 
     /**
@@ -30,71 +32,72 @@ class InlineStyleTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-    	unset($this->object);
+        unset($this->object);
     }
-    
+
     public function testGetHTML()
     {
-    	$this->assertEquals($this->object->getHTML(),
-			file_get_contents(__DIR__."/testfiles/testGetHTML.html"));
+        $this->assertEquals($this->object->getHTML(),
+            file_get_contents($this->basedir."/testGetHTML.html"));
     }
 
     public function testApplyStyleSheet()
     {
-		$this->object->applyStyleSheet("p:not(.p2) { color: red }");
-		$this->assertEquals($this->object->getHTML(),
-			file_get_contents(__DIR__."/testfiles/testApplyStylesheet.html"));
+        $this->object->applyStyleSheet("p:not(.p2) { color: red }");
+        $this->assertEquals($this->object->getHTML(),
+            file_get_contents($this->basedir."/testApplyStylesheet.html"));
     }
 
     public function testApplyRule()
     {
-    	$this->object->applyRule("p:not(.p2)", "color: red");
-    	$this->assertEquals($this->object->getHTML(),
-			file_get_contents(__DIR__."/testfiles/testApplyStylesheet.html"));
+        $this->object->applyRule("p:not(.p2)", "color: red");
+        $this->assertEquals($this->object->getHTML(),
+            file_get_contents($this->basedir."/testApplyStylesheet.html"));
     }
 
     public function testExtractStylesheets()
     {
-        $stylesheets = $this->object->extractStylesheets(null, "testfiles");
-        $this->assertEquals($stylesheets, array(
+        $stylesheets = $this->object->extractStylesheets(null, $this->basedir);
+        $expected = array(
 'p{
-	margin:0;
-	padding:0 0 10px 0;
-	background-image: url("someimage.jpg");
+    margin:0;
+    padding:0 0 10px 0;
+    background-image: url("someimage.jpg");
 }
 a:hover{
-	color:Red;
+    color:Red;
 }
 p:hover{
-	color:blue;
+    color:blue;
 }
 ',
 '
-			h1{
-				color:yellow
-			}
-			p {
-				color:yellow !important;
-			}
-			p {
-				color:blue
-			}
-		',
-));
+    h1{
+        color:yellow
+    }
+    p {
+        color:yellow !important;
+    }
+    p {
+        color:blue
+    }
+',
+);
+        $this->assertEquals($stylesheets, $expected);
     }
 
-	public function testApplyExtractedStylesheet()
-	{
-		$stylesheets = $this->object->extractStylesheets(null, "testfiles");
-		$this->object->applyStylesheet($stylesheets);
+    public function testApplyExtractedStylesheet()
+    {
+        $stylesheets = $this->object->extractStylesheets(null, $this->basedir);
+        $this->object->applyStylesheet($stylesheets);
 
-		$this->assertEquals($this->object->getHTML(),
-			file_get_contents(__DIR__."/testfiles/testApplyExtractedStylesheet.html"));
-	}
+        $this->assertEquals($this->object->getHTML(),
+            file_get_contents($this->basedir."/testApplyExtractedStylesheet.html"));
+    }
 
     public function testParseStyleSheet()
     {
-    	$parsed = $this->object->parseStylesheet("p:not(.p2) { color: red }");
-    	$this->assertEquals($parsed, array(array("p:not(.p2)", "color: red")));
+        $parsed = $this->object->parseStylesheet("p:not(.p2) { color: red }");
+        $this->assertEquals($parsed, array(array("p:not(.p2)", "color: red")));
     }
 }

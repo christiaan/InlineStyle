@@ -47,15 +47,16 @@ class InlineStyle
      *
      * @param string $html
      */
-    public function __construct($html, $encoding = 'UTF-8')
+    public function __construct($html)
     {
         if(!class_exists("CSSQuery")) {
             throw new \Exception(
                 "InlineStyle needs the CSSQuery class");
         }
 
-        $html = htmlspecialchars_decode(htmlentities((string) $html, ENT_NOQUOTES, $encoding), ENT_NOQUOTES);
         $this->_dom = new \DOMDocument();
+        $this->_dom->formatOutput = true;
+
         if(file_exists($html)) {
             $this->_dom->loadHTMLFile($html);
         }
@@ -135,7 +136,7 @@ class InlineStyle
      * @param DOMNode $node leave empty to extract from the whole document
      * @return array the extracted stylesheets
      */
-    public function extractStylesheets(DOMNode $node = null, $base = "")
+    public function extractStylesheets(\DOMNode $node = null, $base = "")
     {
         if(null === $node) {
             $node = $this->_dom;

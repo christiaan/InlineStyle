@@ -1,11 +1,11 @@
 p{
-	margin:0;
-	padding:0 0 10px 0;
-	background-image: url("someimage.jpg");
+    margin:0;
+    padding:0 0 10px 0;
+    background-image: url("someimage.jpg");
 }
 a:hover{
-	color:Red;
+    color:Red;
 }
 p:hover{
-	color:blue;
+    color:blue;
 }
