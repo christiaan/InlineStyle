@@ -39,6 +39,10 @@ class InlineStyle
      * @var DOMDocument the HTML as DOMDocument
      */
     private $_dom;
+
+    /**
+     * @var DOMXPath
+     */
     private $_dom_xpath;
 
     /**
@@ -46,7 +50,7 @@ class InlineStyle
      *
      * @param string $html
      */
-    public function __construct($html="")
+    public function __construct($html = '')
     {
         if ($html) {
             if (file_exists($html))
@@ -67,7 +71,7 @@ class InlineStyle
     }
 
     /**
-     * Load HTML string
+     * Load HTML string (UTF-8 encoding assumed)
      *
      * @param string $html
      */
@@ -99,6 +103,7 @@ class InlineStyle
                 $this->applyRule($selector, $style);
             }
         }
+
         return $this;
     }
 
@@ -109,7 +114,7 @@ class InlineStyle
             return $this->_dom_xpath->query($xpathQuery);
         }
         catch(ParseException $e) {
-            // ignore css rule parse errors
+            // ignore css rule parse exceptions
         }
 
         return array();
@@ -125,8 +130,8 @@ class InlineStyle
     {
         if($selector) {
             $nodes = $this->_getNodesForCssSelector($selector);
-
             $style = $this->_styleToArray($style);
+
             foreach($nodes as $node) {
                 $current = $node->hasAttribute("style") ?
                     $this->_styleToArray($node->getAttribute("style")) :
@@ -134,6 +139,7 @@ class InlineStyle
 
                 $current = $this->_mergeStyles($current, $style);
                 $st = array();
+
                 foreach($current as $prop => $val) {
                     $st[] = "{$prop}:{$val}";
                 }
@@ -141,6 +147,7 @@ class InlineStyle
                 $node->setAttribute("style", implode(";", $st));
             }
         }
+
         return $this;
     }
 
@@ -156,14 +163,17 @@ class InlineStyle
 
     /**
      * Recursively extracts the stylesheet nodes from the DOMNode
-     * @param DOMNode $node leave empty to extract from the whole document
+     *
+     * @param \DOMNode $node leave empty to extract from the whole document
+     * @param string $base The base URI for relative stylesheets
      * @return array the extracted stylesheets
      */
-    public function extractStylesheets(\DOMNode $node = null, $base = "")
+    public function extractStylesheets($node = null, $base = '')
     {
         if(null === $node) {
             $node = $this->_dom;
         }
+
         $stylesheets = array();
 
         if(strtolower($node->nodeName) === "style") {
@@ -173,10 +183,13 @@ class InlineStyle
         else if(strtolower($node->nodeName) === "link") {
             if($node->hasAttribute("href")) {
                 $href = $node->getAttribute("href");
+
                 if($base && false === strpos($href, "://")) {
                     $href = "{$base}/{$href}";
                 }
+
                 $ext = @file_get_contents($href);
+
                 if($ext) {
                     $stylesheets[] = $ext;
                     $node->parentNode->removeChild($node);
@@ -197,7 +210,7 @@ class InlineStyle
     /**
      * Extracts the stylesheet nodes nodes specified by the xpath
      *
-     * @param DOMNode $node leave empty to extract from the whole document
+     * @param string $xpathQuery xpath query to the desired stylesheet
      * @return array the extracted stylesheets
      */
     public function extractStylesheetsWithXpath($xpathQuery)
@@ -242,13 +255,14 @@ class InlineStyle
         $styles = array();
         $style = trim(trim($style), ";");
         if($style) {
-            foreach(explode(";",$style) as $props) {
+            foreach(explode(";", $style) as $props) {
                 $props = trim(trim($props), ";");
                 preg_match('#^([-a-z0-9]+):(.*)$#i', $props, $matches);
-                    list($match, $prop, $val) = $matches;
+                list($match, $prop, $val) = $matches;
                 $styles[$prop] = $val;
             }
         }
+
         return $styles;
     }
 
@@ -267,16 +281,15 @@ class InlineStyle
                 $styleA[$prop] = $val;
             }
         }
+
         return $styleA;
     }
 
     private function _stripStylesheet($s)
     {
+        // strip comments
         $s = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!','', $s);
-        $s = str_replace(array("\r\n","\r","\n","\t",'  ','    ','    '),'',$s);
-        $s = str_replace('{ ', '{', $s);
-        $s = str_replace(' }', '}', $s);
-        $s = str_replace('; ', ';', $s);
+
         return $s;
     }
 }

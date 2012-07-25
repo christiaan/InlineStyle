@@ -107,6 +107,14 @@ p:hover{
             $parsed);
     }
 
+    public function testParseStyleSheetWithComments()
+    {
+        $parsed = $this->object->parseStylesheet("p:not(.p2) { /* blah */ color: red }");
+        $this->assertEquals(
+            array(array("p:not(.p2)", "color: red")),
+            $parsed);
+    }
+
     public function testIllegalXmlUtf8Chars()
     {
         // check an exception is not thrown when loading up illegal XML UTF8 chars
