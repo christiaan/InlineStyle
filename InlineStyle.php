@@ -104,7 +104,7 @@ class InlineStyle
 					array();
 				
 				
-				$current = $this->_mergeStyles($current, $style);
+				$current = $this->_mergeStyles($style, $current);
 				$st = array();
 				foreach($current as $prop => $val) {
 					$st[] = "{$prop}:{$val}";
