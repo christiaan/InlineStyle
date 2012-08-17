@@ -1,0 +1,17 @@
+{
+    "hash": "04639c5ecf32ec04c1a8aa279c1098bd",
+    "packages": [
+        {
+            "package": "symfony/css-selector",
+            "version": "v2.1.0-RC1"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "symfony/css-selector": 5
+    }
+}

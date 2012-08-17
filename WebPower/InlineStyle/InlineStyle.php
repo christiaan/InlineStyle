@@ -1,8 +1,10 @@
 <?php
+namespace WebPower\InlineStyle;
+
 /*
  * InlineStyle MIT License
  *
- * Copyright (c) 2010 Christiaan Baartse
+ * Copyright (c) 2012 Christiaan Baartse
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -24,9 +26,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
-namespace InlineStyler;
-
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 
@@ -36,12 +35,12 @@ use Symfony\Component\CssSelector\Exception\ParseException;
 class InlineStyle
 {
     /**
-     * @var DOMDocument the HTML as DOMDocument
+     * @var \DOMDocument the HTML as DOMDocument
      */
     private $_dom;
 
     /**
-     * @var DOMXPath
+     * @var \DOMXPath
      */
     private $_dom_xpath;
 

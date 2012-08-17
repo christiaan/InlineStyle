@@ -1,5 +1,5 @@
 {
-    "name": "mtibben/html-inline-styler",
+    "name": "webpower/inlinestyle",
     "type": "library",
     "description": "Apply CSS stylesheets directly as inline styles to a HTML document",
     "license": "MIT",
@@ -15,8 +15,7 @@
         "php": ">=5.3.3",
         "symfony/css-selector": ">=2.1.0-RC1"
     },
-    "target-dir": "InlineStyler",
     "autoload": {
-        "psr-0": { "InlineStyler": "" }
+        "psr-0": { "WebPower": "" }
     }
 }
