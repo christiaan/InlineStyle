@@ -215,4 +215,19 @@ CSS
             file_get_contents($this->basedir."/testApplyStylesheetObeysSpecificity.html"),
             $this->object->getHTML());
     }
+
+    function testNonWorkingPseudoSelectors()
+    {
+        // Regressiontest for #5
+        $this->object->applyStylesheet(<<<CSS
+ul#nav li.active a:link, body.ie7 .col_3:visited h2 ~ h2 {
+    color: blue;
+}
+
+ul > li ul li:active ol li:first-letter {
+    color: red;
+}
+CSS
+        );
+    }
 }
