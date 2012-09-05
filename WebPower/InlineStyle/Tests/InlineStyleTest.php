@@ -120,4 +120,99 @@ p:hover{
         // check an exception is not thrown when loading up illegal XML UTF8 chars
         new InlineStyle("<html><body>".chr(2).chr(3).chr(4).chr(5)."</body></html>");
     }
+
+    public function testGetScoreForSelector()
+    {
+        $this->assertEquals(
+            array(1,1,3),
+            $this->object->getScoreForSelector('ul#nav li.active a'),
+            'ul#nav li.active a'
+        );
+
+        $this->assertEquals(
+            array(0,2,3),
+            $this->object->getScoreForSelector('body.ie7 .col_3 h2 ~ h2'),
+            'body.ie7 .col_3 h2 ~ h2'
+        );
+
+        $this->assertEquals(
+            array(1,0,2),
+            $this->object->getScoreForSelector('#footer *:not(nav) li'),
+            '#footer *:not(nav) li'
+        );
+
+        $this->assertEquals(
+            array(0,0,7),
+            $this->object->getScoreForSelector('ul > li ul li ol li:first-letter'),
+            'ul > li ul li ol li:first-letter'
+        );
+    }
+
+    function testSortingParsedStylesheet()
+    {
+        $parsed = $this->object->parseStylesheet(<<<CSS
+ul#nav li.active a, body.ie7 .col_3 h2 ~ h2 {
+    color: blue;
+}
+
+ul > li ul li ol li:first-letter {
+    color: red;
+}
+CSS
+);
+        $this->assertEquals(array (
+            array (
+                'ul#nav li.active a',
+                'color: blue',
+            ),
+            array (
+                'body.ie7 .col_3 h2 ~ h2',
+                'color: blue',
+            ),
+            array (
+                'ul > li ul li ol li:first-letter',
+                'color: red',
+            ),
+        ), $parsed);
+
+        $parsed = $this->object->sortSelectorsOnSpecificity($parsed);
+
+        $this->assertEquals(array (
+            array (
+                'ul > li ul li ol li:first-letter',
+                'color: red',
+            ),
+            array (
+                'body.ie7 .col_3 h2 ~ h2',
+                'color: blue',
+            ),
+            array (
+                'ul#nav li.active a',
+                'color: blue',
+            ),
+        ), $parsed);
+    }
+
+    function testApplyStylesheetObeysSpecificity()
+    {
+        $this->object->applyStylesheet(<<<CSS
+p {
+    color: red;
+}
+
+.p2 {
+    color: blue;
+}
+
+p.p2 {
+    color: green;
+}
+
+CSS
+);
+
+        $this->assertEquals(
+            file_get_contents($this->basedir."/testApplyStylesheetObeysSpecificity.html"),
+            $this->object->getHTML());
+    }
 }

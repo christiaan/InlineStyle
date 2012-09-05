@@ -97,7 +97,9 @@ class InlineStyle
     {
         $stylesheet = (array) $stylesheet;
         foreach($stylesheet as $ss) {
-            foreach($this->parseStylesheet($ss) as $arr) {
+            $parsed = $this->parseStylesheet($ss);
+            $parsed = $this->sortSelectorsOnSpecificity($parsed);
+            foreach($parsed as $arr) {
                 list($selector, $style) = $arr;
                 $this->applyRule($selector, $style);
             }
@@ -238,10 +240,40 @@ class InlineStyle
         $stylesheet = trim(trim($stylesheet), "}");
         foreach(explode("}", $stylesheet) as $rule) {
             list($selector, $style) = explode("{", $rule, 2);
-            $parsed[] = array(trim($selector), trim(trim($style), ";"));
+            foreach (explode(',', $selector) as $sel) {
+                $parsed[] = array(trim($sel), trim(trim($style), ";"));
+            }
         }
 
         return $parsed;
+    }
+
+    public function sortSelectorsOnSpecificity($parsed)
+    {
+        usort($parsed, array($this, 'sortOnSpecificity'));
+        return $parsed;
+    }
+
+    private function sortOnSpecificity($a, $b)
+    {
+        $a = $this->getScoreForSelector($a[0]);
+        $b = $this->getScoreForSelector($b[0]);
+
+        foreach (range(0, 2) as $i) {
+            if ($a[$i] !== $b[$i]) {
+                return $a[$i] < $b[$i] ? -1 : 1;
+            }
+        }
+        return 0;
+    }
+
+    public function getScoreForSelector($selector)
+    {
+        return array(
+            preg_match_all('/#\w/i', $selector, $result), // ID's
+            preg_match_all('/\.\w/i', $selector, $result), // Classes
+            preg_match_all('/^\w|\ \w|\(\w|\:[^not]/i', $selector, $result) // Tags
+        );
     }
 
     /**
