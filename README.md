@@ -14,7 +14,7 @@ Use composer to download required dependencies.
 
 Import InlineStyle
 
-    use \WebPower\InlineStyle\InlineStyle;
+    use \InlineStyle\InlineStyle;
 
 Create a new InlineStyle object from either a HTML string or HTML file.
 

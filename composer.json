@@ -1,5 +1,5 @@
 {
-    "name": "webpower/inlinestyle",
+    "name": "inlinestyle/inlinestyle",
     "type": "library",
     "description": "Apply CSS stylesheets directly as inline styles to a HTML document",
     "license": "MIT",
@@ -16,6 +16,6 @@
         "symfony/css-selector": ">=2.1.0-RC1"
     },
     "autoload": {
-        "psr-0": { "WebPower": "" }
+        "psr-0": { "InlineStyle": "" }
     }
 }

@@ -13,7 +13,7 @@
 >
     <testsuites>
         <testsuite name="InlineStyle Test Suite">
-            <directory>WebPower</directory>
+            <directory>InlineStyle</directory>
         </testsuite>
     </testsuites>
 </phpunit>

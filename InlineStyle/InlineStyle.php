@@ -1,5 +1,5 @@
 <?php
-namespace WebPower\InlineStyle;
+namespace InlineStyle;
 
 /*
  * InlineStyle MIT License
