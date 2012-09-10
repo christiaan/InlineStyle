@@ -1,5 +1,6 @@
 InlineStyle
 ============
+[![Build Status](https://secure.travis-ci.org/christiaan/InlineStyle.png)](http://travis-ci.org/christiaan/InlineStyle)
 
 InlineStyle provides an easy way to apply embedded and external stylesheets
 directly as inline styles on the HTML tags. This is especially targetted at mail
