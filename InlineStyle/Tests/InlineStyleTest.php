@@ -37,8 +37,8 @@ class InlineStyleTest extends \PHPUnit_Framework_TestCase
 
     public function testGetHTML()
     {
-        $this->assertEquals(
-            file_get_contents($this->basedir."/testGetHTML.html"),
+    	$this->assertEquals(
+           	file_get_contents($this->basedir."/testGetHTML.html"),
             $this->object->getHTML());
     }
 
@@ -61,32 +61,7 @@ class InlineStyleTest extends \PHPUnit_Framework_TestCase
     public function testExtractStylesheets()
     {
         $stylesheets = $this->object->extractStylesheets(null, $this->basedir);
-        $expected = array(
-'p{
-    margin:0;
-    padding:0 0 10px 0;
-    background-image: url("someimage.jpg");
-}
-a:hover{
-    color:Red;
-}
-p:hover{
-    color:blue;
-}
-',
-'
-    h1{
-        color:yellow
-    }
-    p {
-        color:yellow !important;
-    }
-    p {
-        color:blue
-    }
-',
-);
-        $this->assertEquals($expected, $stylesheets);
+        $this->assertEquals(include $this->basedir."/testExtractStylesheets.php",$stylesheets);
     }
 
     public function testApplyExtractedStylesheet()
@@ -210,7 +185,6 @@ p.p2 {
 
 CSS
 );
-
         $this->assertEquals(
             file_get_contents($this->basedir."/testApplyStylesheetObeysSpecificity.html"),
             $this->object->getHTML());
