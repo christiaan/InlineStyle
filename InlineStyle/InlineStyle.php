@@ -83,6 +83,14 @@ class InlineStyle
         // remove all control characters except CR, LF and tab
         $html = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $html); // 00-09, 11-31, 127
 
+        /**
+         * DOMDocument is very good at dealing with imperfect markup, but it throws warnings all over the place when it does.
+         * Set libxml_use_internal_errors(true) before calling loadHTML. This will prevent errors from bubbling up to
+         * your default error handler. And you can then get at them (if you desire) using other libxml error functions.
+         * @link http://www.php.net/manual/en/domdocument.loadhtml.php#95463
+         */
+        libxml_use_internal_errors(true);
+
         $this->_dom->loadHTML($html);
         $this->_dom_xpath = new \DOMXPath($this->_dom);
     }
