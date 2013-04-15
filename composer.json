@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/css-selector": ">=2.1.0-RC1"
+        "symfony/css-selector": "~2.1"
     },
     "autoload": {
         "psr-0": { "InlineStyle": "" }
