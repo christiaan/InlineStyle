@@ -52,7 +52,7 @@ class InlineStyle
     public function __construct($html = '')
     {
         if ($html) {
-            if (file_exists($html))
+            if (strlen($html) <= PHP_MAXPATHLEN && file_exists($html))
                 $this->loadHTMLFile($html);
             else
                 $this->loadHTML($html);
