@@ -190,6 +190,22 @@ CSS
             $this->object->getHTML());
     }
 
+    function testDocDocumentDirectly()
+    {
+        $dom = new \DOMDocument();
+        $dom->formatOutput = false;
+        $dom->loadHTML('<!doctype html><html><body><div></div></body></html>');
+
+        $this->object->loadDomDocument($dom);
+
+        $this->object->applyRule('div', 'color: red');
+
+        $this->assertEquals('<!DOCTYPE html>
+<html><body><div style="color: red"></div></body></html>
+', $dom->saveHTML());
+    }
+
+
     function testNonWorkingPseudoSelectors()
     {
         // Regressiontest for #5

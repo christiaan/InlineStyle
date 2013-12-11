@@ -40,11 +40,6 @@ class InlineStyle
     private $_dom;
 
     /**
-     * @var \DOMXPath
-     */
-    private $_dom_xpath;
-
-    /**
      * Prepare all the necessary objects
      *
      * @param string $html
@@ -52,10 +47,13 @@ class InlineStyle
     public function __construct($html = '')
     {
         if ($html) {
-            if (strlen($html) <= PHP_MAXPATHLEN && file_exists($html))
+            if ($html instanceof \DOMDocument) {
+                $this->loadDomDocument($html);
+            } else if (strlen($html) <= PHP_MAXPATHLEN && file_exists($html)) {
                 $this->loadHTMLFile($html);
-            else
+            } else {
                 $this->loadHTML($html);
+            }
         }
     }
 
@@ -84,7 +82,16 @@ class InlineStyle
         $html = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $html); // 00-09, 11-31, 127
 
         $this->_dom->loadHTML($html);
-        $this->_dom_xpath = new \DOMXPath($this->_dom);
+    }
+
+    /**
+     * Load the HTML as a DOMDocument directly
+     *
+     * @param \DOMDocument $domDocument
+     */
+    public function loadDomDocument(\DOMDocument $domDocument)
+    {
+        $this->_dom = $domDocument;
     }
 
     /**
@@ -108,11 +115,15 @@ class InlineStyle
         return $this;
     }
 
+    /**
+     * @param string $sel Css Selector
+     * @return array|\DOMNodeList|\DOMNode[]
+     */
     private function _getNodesForCssSelector($sel)
     {
         try {
             $xpathQuery = CssSelector::toXPath($sel);
-            return $this->_dom_xpath->query($xpathQuery);
+            return $this->_getDomXpath()->query($xpathQuery);
         }
         catch(ParseException $e) {
             // ignore css rule parse exceptions
@@ -218,7 +229,7 @@ class InlineStyle
     {
         $stylesheets = array();
 
-        $nodes = $this->_dom_xpath->query($xpathQuery);
+        $nodes = $this->_getDomXpath()->query($xpathQuery);
         foreach ($nodes as $node)
         {
             $stylesheets[] = $node->nodeValue;
@@ -331,5 +342,10 @@ class InlineStyle
         $s = preg_replace('/@[-|keyframes].*?\{.*?\}[ \r\n]*\}/s', '', $s);
 
         return $s;
+    }
+
+    private function _getDomXpath()
+    {
+        return new \DOMXPath($this->_dom);
     }
 }
