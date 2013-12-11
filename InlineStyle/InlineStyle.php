@@ -199,6 +199,11 @@ class InlineStyle
                 if($base && false === strpos($href, "://")) {
                     $href = "{$base}/{$href}";
                 }
+                
+                //href is not an url : remove query part if exists
+                if(false === strpos($href, "://") && false !== strpos($href, "?")) {
+                   $href = current(explode("?",$href));
+                }
 
                 $ext = @file_get_contents($href);
 
