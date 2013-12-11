@@ -204,4 +204,18 @@ ul > li ul li:active ol li:first-letter {
 CSS
         );
     }
+
+    /**
+     * Regression tests for #10 _styleToArray crashes when presented with an invalid property name
+     */
+    function testInvalidCssProperties()
+    {
+        $this->object->applyStylesheet(<<<CSS
+ul {
+    asohdtoairet;
+    garbage: )&%)*(%);
+}
+CSS
+);
+    }
 }
