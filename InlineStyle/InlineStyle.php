@@ -199,9 +199,16 @@ class InlineStyle
         }
 
         if($node->hasChildNodes()) {
-            foreach($node->childNodes as $child) {
-                $stylesheets = array_merge($stylesheets,
-                    $this->extractStylesheets($child, $base));
+            //Copy child nodes into an array to prevent node destruction
+            $childNodes = array();
+            for($i = 0; $i < $node->childNodes->length; ++$i){
+                $childNodes[] = $node->childNodes->item($i);
+            }
+            foreach($childNodes as $child){
+                $stylesheets = array_merge(
+                    $stylesheets,
+                    $this->extractStylesheets($child, $base)
+                );
             }
         }
 
