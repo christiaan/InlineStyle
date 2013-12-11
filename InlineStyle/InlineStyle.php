@@ -277,7 +277,7 @@ class InlineStyle
                 return $a[$i] < $b[$i] ? -1 : 1;
             }
         }
-        return 0;
+        return 1;
     }
 
     public function getScoreForSelector($selector)

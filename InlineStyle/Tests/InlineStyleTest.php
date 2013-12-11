@@ -205,6 +205,43 @@ CSS
 ', $dom->saveHTML());
     }
 
+    /**
+     * Regression test for #14 Selectors are sometimes sorted into the wrong cascading order
+     */
+    function testSortingOnSpecifitySameSpecificity()
+    {
+        $parsed = $this->object->parseStylesheet(<<<CSS
+ul {
+    color: blue;
+}
+
+ul.class {
+    color: green;
+}
+
+ul {
+    color: red;
+}
+CSS
+        );
+
+        $parsed = $this->object->sortSelectorsOnSpecificity($parsed);
+
+        $this->assertEquals(array(
+                array(
+                    'ul',
+                    'color: red'
+                ),
+                array(
+                    'ul',
+                    'color: blue'
+                ),
+                array(
+                    'ul.class',
+                    'color: green'
+                ),
+            ), $parsed);
+    }
 
     function testNonWorkingPseudoSelectors()
     {
