@@ -292,9 +292,11 @@ class InlineStyle
                 $props = trim(trim($props), ";");
                 //Don't parse empty props
                 if(!trim($props))continue;
-                preg_match('#^([-a-z0-9\*]+):(.*)$#i', $props, $matches);
-                list($match, $prop, $val) = $matches;
-                $styles[$prop] = $val;
+                //Only match valid CSS rules
+                if (preg_match('#^([-a-z0-9\*]+):(.*)$#i', $props, $matches)) {
+                    list($match, $prop, $val) = $matches;
+                    $styles[$prop] = $val;
+                }
             }
         }
 
