@@ -230,11 +230,11 @@ CSS
         $this->assertEquals(array(
                 array(
                     'ul',
-                    'color: red'
+                    'color: blue'
                 ),
                 array(
                     'ul',
-                    'color: blue'
+                    'color: red'
                 ),
                 array(
                     'ul.class',
