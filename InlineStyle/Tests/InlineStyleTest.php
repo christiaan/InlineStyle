@@ -271,4 +271,24 @@ ul {
 CSS
 );
     }
+
+    function testRegression24() {
+        $content = '<p style="text-align:center;">Hello World!</p>';
+        $htmldoc = new InlineStyle($content);
+        $htmldoc->applyStylesheet('p{
+  text-align: left;
+}');
+        $expected = <<<HTML
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body><p style="text-align:center">Hello World!</p></body></html>
+
+HTML;
+
+
+        $this->assertEquals($expected, $htmldoc->getHTML());
+        $htmldoc->applyStylesheet('p{
+  text-align: left;
+}');
+        $this->assertEquals($expected, $htmldoc->getHTML());
+    }
 }

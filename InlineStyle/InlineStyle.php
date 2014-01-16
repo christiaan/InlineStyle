@@ -48,7 +48,7 @@ class InlineStyle
     {
         if ($html) {
             if ($html instanceof \DOMDocument) {
-                $this->loadDomDocument($html);
+                $this->loadDomDocument(clone $html);
             } else if (strlen($html) <= PHP_MAXPATHLEN && file_exists($html)) {
                 $this->loadHTMLFile($html);
             } else {
@@ -74,14 +74,15 @@ class InlineStyle
      */
     public function loadHTML($html)
     {
-        $this->_dom = new \DOMDocument();
-        $this->_dom->formatOutput = true;
+        $dom = new \DOMDocument();
+        $dom->formatOutput = true;
 
         // strip illegal XML UTF-8 chars
         // remove all control characters except CR, LF and tab
         $html = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $html); // 00-09, 11-31, 127
 
-        $this->_dom->loadHTML($html);
+        $dom->loadHTML($html);
+        $this->loadDomDocument($dom);
     }
 
     /**
@@ -92,6 +93,12 @@ class InlineStyle
     public function loadDomDocument(\DOMDocument $domDocument)
     {
         $this->_dom = $domDocument;
+        foreach ($this->_getNodesForCssSelector('[style]') as $node) {
+            $node->setAttribute(
+                'inlinestyle-original-style',
+                $node->getAttribute('style')
+            );
+        }
     }
 
     /**
@@ -117,7 +124,7 @@ class InlineStyle
 
     /**
      * @param string $sel Css Selector
-     * @return array|\DOMNodeList|\DOMNode[]
+     * @return array|\DOMNodeList|\DOMElement[]
      */
     private function _getNodesForCssSelector($sel)
     {
@@ -150,13 +157,8 @@ class InlineStyle
                     array();
 
                 $current = $this->_mergeStyles($current, $style);
-                $st = array();
 
-                foreach($current as $prop => $val) {
-                    $st[] = "{$prop}:{$val}";
-                }
-
-                $node->setAttribute("style", implode(";", $st));
+                $node->setAttribute("style", $this->_arrayToStyle($current));
             }
         }
 
@@ -170,7 +172,22 @@ class InlineStyle
      */
     public function getHTML()
     {
-        return $this->_dom->saveHTML();
+        $clone = clone $this;
+        foreach ($clone->_getNodesForCssSelector('[inlinestyle-original-style]') as $node) {
+            $current = $node->hasAttribute("style") ?
+                $this->_styleToArray($node->getAttribute("style")) :
+                array();
+            $original = $node->hasAttribute("inlinestyle-original-style") ?
+                $this->_styleToArray($node->getAttribute("inlinestyle-original-style")) :
+                array();
+
+            $current = $clone->_mergeStyles($current, $original);
+
+            $node->setAttribute("style", $this->_arrayToStyle($current));
+            $node->removeAttribute('inlinestyle-original-style');
+        }
+
+        return $clone->_dom->saveHTML();
     }
 
     /**
@@ -314,6 +331,15 @@ class InlineStyle
         return $styles;
     }
 
+    private function _arrayToStyle($array)
+    {
+        $st = array();
+        foreach($array as $prop => $val) {
+            $st[] = "{$prop}:{$val}";
+        }
+        return \implode(';', $st);
+    }
+
     /**
      * Merges two sets of style properties taking !important into account
      * @param array $styleA
@@ -347,5 +373,10 @@ class InlineStyle
     private function _getDomXpath()
     {
         return new \DOMXPath($this->_dom);
+    }
+
+    public function __clone()
+    {
+        $this->_dom = clone $this->_dom;
     }
 }
