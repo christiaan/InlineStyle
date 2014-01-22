@@ -122,6 +122,12 @@ class InlineStyleTest extends \PHPUnit_Framework_TestCase
             'ul > li ul li ol li:first-letter'
         );
     }
+    
+    public function testActivePseudoSelectors(){
+    	
+    	$object = new InlineStyle($this->basedir."/testActivePseudoSelector.html");
+    	$object->applyStylesheet($object->extractStylesheets());
+    }
 
     function testSortingParsedStylesheet()
     {
