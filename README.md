@@ -14,7 +14,7 @@ Run
     composer.phar require inlinestyle/inlinestyle
 Or add the following to your composer.json file
 	"require": {
-		"inlinestyle/inlinestyle": "1.0"
+		"inlinestyle/inlinestyle": "1.*"
 	}
 
 Usage
