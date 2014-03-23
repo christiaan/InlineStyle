@@ -204,32 +204,36 @@ class InlineStyle
         }
 
         $stylesheets = array();
+        if($node->hasChildNodes()) {
+            $removeQueue = array();
+            foreach($node->childNodes as $child) {
+                $nodeName = strtolower($child->nodeName);
+                if($nodeName === "style") {
+                    $stylesheets[] = $child->nodeValue;
+                    $removeQueue[] = $child;
+                } else if($nodeName === "link" && strtolower($child->getAttribute('rel')) === 'stylesheet') {
+                    if($child->hasAttribute("href")) {
+                        $href = $child->getAttribute("href");
 
-        if(strtolower($node->nodeName) === "style") {
-            $stylesheets[] = $node->nodeValue;
-            $node->parentNode->removeChild($node);
-        }
-        else if(strtolower($node->nodeName) === "link" && strtolower($node->getAttribute('rel')) === 'stylesheet') {
-            if($node->hasAttribute("href")) {
-                $href = $node->getAttribute("href");
+                        if($base && false === strpos($href, "://")) {
+                            $href = "{$base}/{$href}";
+                        }
 
-                if($base && false === strpos($href, "://")) {
-                    $href = "{$base}/{$href}";
-                }
+                        $ext = @file_get_contents($href);
 
-                $ext = @file_get_contents($href);
-
-                if($ext) {
-                    $stylesheets[] = $ext;
-                    $node->parentNode->removeChild($node);
+                        if($ext) {
+                            $removeQueue[] = $child;
+                            $stylesheets[] = $ext;
+                        }
+                    }
+                } else {
+                    $stylesheets = array_merge($stylesheets,
+                        $this->extractStylesheets($child, $base));
                 }
             }
-        }
 
-        if($node->hasChildNodes()) {
-            foreach($node->childNodes as $child) {
-                $stylesheets = array_merge($stylesheets,
-                    $this->extractStylesheets($child, $base));
+            foreach ($removeQueue as $child) {
+                $child->parentNode->removeChild($child);
             }
         }
 

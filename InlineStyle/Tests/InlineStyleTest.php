@@ -298,9 +298,7 @@ HTML;
         $expected = <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-<head>
-<title>Example</title>
-</head>
+<head><title>Example</title></head>
 <body>
 <p style='margin:0;padding:0 0 10px 0;background-image: url("someimage.jpg")'>Paragraph</p>
 <strong style="font-weight: bold">Strong</strong>
