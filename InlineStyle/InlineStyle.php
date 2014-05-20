@@ -208,7 +208,7 @@ class InlineStyle
             $removeQueue = array();
             foreach($node->childNodes as $child) {
                 $nodeName = strtolower($child->nodeName);
-                if($nodeName === "style" && in_array(strtolower($child->getAttribute('media')), array('', 'screen'))) {
+                if($nodeName === "style" && in_array(strtolower($child->getAttribute('media')), array('', 'screen')) !== false) {
                     $stylesheets[] = $child->nodeValue;
                     $removeQueue[] = $child;
                 } else if($nodeName === "link" && strtolower($child->getAttribute('rel')) === 'stylesheet') {
