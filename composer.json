@@ -2,6 +2,7 @@
     "name": "inlinestyle/inlinestyle",
     "type": "library",
     "description": "Apply CSS stylesheets directly as inline styles to a HTML document",
+    "keywords": ["css", "email", "inline"],
     "license": "MIT",
     "authors": [
         {
