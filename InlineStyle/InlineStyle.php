@@ -208,10 +208,10 @@ class InlineStyle
             $removeQueue = array();
             foreach($node->childNodes as $child) {
                 $nodeName = strtolower($child->nodeName);
-                if($nodeName === "style") {
+                if($nodeName === "style" && in_array(strtolower($child->getAttribute('media')), array('', 'screen')) !== false) {
                     $stylesheets[] = $child->nodeValue;
                     $removeQueue[] = $child;
-                } else if($nodeName === "link" && strtolower($child->getAttribute('rel')) === 'stylesheet') {
+                } else if($nodeName === "link" && strtolower($child->getAttribute('rel')) === 'stylesheet' && in_array(strtolower($child->getAttribute('media')), array('', 'screen')) !== false) {
                     if($child->hasAttribute("href")) {
                         $href = $child->getAttribute("href");
 

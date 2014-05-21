@@ -309,4 +309,46 @@ HTML;
 HTML;
         $this->assertEquals($expected, $htmldoc->getHTML());
     }
+
+    function testMediaStylesheets31() {
+        $htmldoc = new InlineStyle(file_get_contents($this->basedir . '/testMediaStylesheets31.html'));
+        $htmldoc->applyStylesheet($htmldoc->extractStylesheets(null, $this->basedir));
+        $expected = <<<HTML
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head><title>Example</title></head>
+<body>
+<style type="text/css" media="print">
+    h1{
+        display:none;
+    }
+</style>
+<h1 style="color:yellow">An example title</h1>
+<p style="color:yellow !important;line-height:1.5em">Paragraph 1</p>
+</body>
+</html>
+
+HTML;
+        $this->assertEquals($expected, $htmldoc->getHTML());
+    }
+
+    function testLinkedMediaStylesheets31() {
+        $htmldoc = new InlineStyle(file_get_contents($this->basedir . '/testLinkedMediaStylesheets31.html'));
+        $htmldoc->applyStylesheet($htmldoc->extractStylesheets(null, $this->basedir));
+        $expected = <<<HTML
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title>Example</title>
+<link rel="stylesheet" href="external.css" media="print">
+</head>
+<body>
+<h1>An example title</h1>
+<p>Paragraph <strong style="font-weight: bold">1</strong></p>
+</body>
+</html>
+
+HTML;
+        $this->assertEquals($expected, $htmldoc->getHTML());
+    }
 }
