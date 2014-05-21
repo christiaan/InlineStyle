@@ -193,11 +193,14 @@ class InlineStyle
     /**
      * Recursively extracts the stylesheet nodes from the DOMNode
      *
+     * This cannot be done with XPath or a CSS selector because the order in
+     * which the elements are found matters
+     *
      * @param \DOMNode $node leave empty to extract from the whole document
      * @param string $base The base URI for relative stylesheets
      * @return array the extracted stylesheets
      */
-    public function extractStylesheets($node = null, $base = '')
+    public function extractStylesheets($node = null, $base = '', $devices = array('all', 'screen', 'handheld'))
     {
         if(null === $node) {
             $node = $this->_dom;
@@ -206,12 +209,13 @@ class InlineStyle
         $stylesheets = array();
         if($node->hasChildNodes()) {
             $removeQueue = array();
+            /** @var $child \DOMElement */
             foreach($node->childNodes as $child) {
                 $nodeName = strtolower($child->nodeName);
-                if($nodeName === "style") {
+                if($nodeName === "style" && $this->isForAllowedMediaDevice($child->getAttribute('media'), $devices)) {
                     $stylesheets[] = $child->nodeValue;
                     $removeQueue[] = $child;
-                } else if($nodeName === "link" && strtolower($child->getAttribute('rel')) === 'stylesheet') {
+                } else if($nodeName === "link" && strtolower($child->getAttribute('rel')) === 'stylesheet' && $this->isForAllowedMediaDevice($child->getAttribute('media'), $devices)) {
                     if($child->hasAttribute("href")) {
                         $href = $child->getAttribute("href");
 
@@ -382,5 +386,19 @@ class InlineStyle
     public function __clone()
     {
         $this->_dom = clone $this->_dom;
+    }
+
+    private function isForAllowedMediaDevice($mediaAttribute, array $devices)
+    {
+        $mediaAttribute = strtolower($mediaAttribute);
+        $mediaDevices = explode(',', $mediaAttribute);
+
+        foreach ($mediaDevices as $device) {
+            $device = trim($device);
+            if (!$device || in_array($device, $devices)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
