@@ -80,6 +80,9 @@ class InlineStyle
         // strip illegal XML UTF-8 chars
         // remove all control characters except CR, LF and tab
         $html = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $html); // 00-09, 11-31, 127
+        
+        // convert special characters to HTML
+        $html = htmlentities($html);
 
         $dom->loadHTML($html);
         $this->loadDomDocument($dom);
