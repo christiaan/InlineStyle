@@ -6,9 +6,12 @@ namespace InlineStyle;
  */
 class InlineStyleTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreationFromLocalFile()
+    public function test_inline_without_any_styles()
     {
-        $obj = InlineStyle::fromFile(__DIR__ . '/resources/test.html');
+        $html = '<p>Hoi</p>';
 
+        $actual = InlineStyle::inline($html);
+
+        $this->assertEquals($html, $actual);
     }
 }

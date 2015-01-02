@@ -14,47 +14,28 @@ Run
     composer.phar require inlinestyle/inlinestyle
 Or add the following to your composer.json file
 	"require": {
-		"inlinestyle/inlinestyle": "1.*"
+		"inlinestyle/inlinestyle": "2.*"
 	}
 
 Usage
 -----
 
-Use composer to download required dependencies.
+The library has one simple exposed api the `InlineStyle::inline(string $html, array $options)` method.
 
-Import InlineStyle
+```php
+$inlinedHtml = InlineStyle::inline($html, [
+  'formatOutput' => true,
+  'charset' => 'utf8',
+  'devices' => ['all', 'screen', 'handheld'],
+  'baseUrl' => 'http://example.com'
+]);
+```
 
-    use \InlineStyle\InlineStyle;
+The options that can be passed to the inline method
 
-Create a new InlineStyle object from either a HTML string or HTML file.
-
-    $htmldoc = new InlineStyle("testfiles/test.html");
-
-or
-
-    $htmldoc = new InlineStyle(file_get_contents("http://github.com"));
-
-### Apply the embedded and external stylesheets
-
-First we'll have to extract the stylesheets from the document and then we have
-to apply them.
-
-    $htmldoc->applyStylesheet($htmldoc->extractStylesheets());
-
-The second param is the base url that is used to parse the links to external
-stylesheets.
-
-    $htmldoc->applyStylesheet($htmldoc->extractStylesheets(null, "http://github.com"));
-
-### Applying additional stylesheets
-
-This class can also be used to apply a given css template to each processed HTML
-file.
-
-    $htmldoc->applyStylesheet(file_get_contents("testfiles/external.css"));
-
-### Retrieving the modified HTML
-
-After calling applyStylesheet various times the resulting HTML can be retrieved as a string using getHTML.
-
-    $html = $htmldoc->getHTML();
+| Name | default value | description |
+|------------------------------------|
+| formatOutput | true | Nicely formats output with indentation and extra space. |
+| charset | utf8 | input character set, output is always utf8 |
+| devices | ['all', 'screen', 'handheld'] | allowed media devices, styles for other devices are ignored |
+| baseUrl | '' | relative links are relative to this url |

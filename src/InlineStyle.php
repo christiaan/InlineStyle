@@ -32,8 +32,8 @@ namespace InlineStyle;
  */
 final class InlineStyle
 {
-    public static function fromFile($file)
+    public static function inline($html)
     {
-
+        return $html;
     }
 }
