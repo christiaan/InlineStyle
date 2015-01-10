@@ -8,14 +8,14 @@ namespace InlineStyle\Css;
  */
 final class Declarations
 {
-    private $styles;
+    private $declarations;
 
     /**
-     * @param array $styles
+     * @param array $declarations
      */
-    private function __construct(array $styles)
+    private function __construct(array $declarations)
     {
-        $this->styles = $styles;
+        $this->declarations = $declarations;
     }
 
     /**
@@ -24,29 +24,25 @@ final class Declarations
      */
     public static function fromString($string)
     {
-        $styles = array();
-        $style = trim($string, " \t\n\r;");
-        $style = self::stripComments($style);
-        foreach (explode(";", $style) as $props) {
-            $props = trim(trim($props), ";");
-            //Don't parse empty props
-            if (!trim($props)) {
-                continue;
-            }
-            //Only match valid CSS rules
+        $string = self::stripComments($string);
+        $string = explode(";", $string);
+        $string = array_filter(array_map('trim', $string));
+
+        $declarations = array();
+        foreach ($string as $declaration) {
             if (preg_match(
-                    '/^([-a-z0-9\*]+)\s*:\s*(.*)$/i',
-                    $props,
+                    '/^([-a-z0-9\*]+)\s*:(.*)$/i',
+                    $declaration,
                     $matches
                 ) &&
                 isset($matches[0], $matches[1], $matches[2])
             ) {
                 list(, $name, $value) = $matches;
-                $styles[$name] = $value;
+                $declarations[$name] = trim($value);
             }
         }
 
-        return new Declarations($styles);
+        return new Declarations($declarations);
     }
 
     /**
@@ -55,7 +51,7 @@ final class Declarations
     public function __toString()
     {
         $st = array();
-        foreach ($this->styles as $name => $value) {
+        foreach ($this->declarations as $name => $value) {
             $st[] = $name . ':' . $value;
         }
 
@@ -70,8 +66,8 @@ final class Declarations
      */
     public function merge(Declarations $other)
     {
-        $styleA = $this->styles;
-        $styleB = $other->styles;
+        $styleA = $this->declarations;
+        $styleB = $other->declarations;
 
         foreach ($styleB as $name => $val) {
             if (!isset($styleA[$name]) || $this->isImportant($styleA[$name])) {
@@ -82,9 +78,9 @@ final class Declarations
         return new Declarations($styleA);
     }
 
-    private static function stripComments($style)
+    private static function stripComments($declaration)
     {
-        return preg_replace('/\/\*[^*]*\*+([^\/][^*]*\*+)*\//', '', $style);
+        return preg_replace('/\/\*[^*]*\*+([^\/][^*]*\*+)*\//', '', $declaration);
     }
 
     /**
