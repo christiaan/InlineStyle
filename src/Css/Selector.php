@@ -45,10 +45,12 @@ final class Selector
      */
     private function getScore()
     {
+        // The $_ argument is needed for PHP 5.3 see
+        // http://php.net/preg_match_all#refsect1-function.preg-match-all-changelog
         return array(
-            'ids' => preg_match_all('/#\w/i', $this->selector),
-            'classes' => preg_match_all('/\.\w/i', $this->selector),
-            'tags' =>preg_match_all('/^\w|\ \w|\(\w|\:[^not]/i', $this->selector)
+            'ids' => preg_match_all('/#\w/i', $this->selector, $_),
+            'classes' => preg_match_all('/\.\w/i', $this->selector, $_),
+            'tags' =>preg_match_all('/^\w|\ \w|\(\w|\:[^not]/i', $this->selector, $_)
         );
     }
 }
