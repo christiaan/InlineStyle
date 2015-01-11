@@ -24,8 +24,7 @@ final class Declarations
      */
     public static function fromString($string)
     {
-        $string = self::stripComments($string);
-        $string = explode(";", $string);
+        $string = explode(';', $string);
         $string = array_filter(array_map('trim', $string));
 
         $declarations = array();
@@ -78,11 +77,6 @@ final class Declarations
         return new Declarations($styleA);
     }
 
-    private static function stripComments($declaration)
-    {
-        return preg_replace('/\/\*[^*]*\*+([^\/][^*]*\*+)*\//', '', $declaration);
-    }
-
     /**
      * Tells if a style value is marked with !important at the end
      *
@@ -92,8 +86,8 @@ final class Declarations
     private function isImportant($value)
     {
         return substr(
-            str_replace(" ", "", strtolower($value)),
+            str_replace(' ', '', strtolower($value)),
             -10
-        ) !== "!important";
+        ) !== '!important';
     }
 }
