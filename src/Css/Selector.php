@@ -17,6 +17,21 @@ final class Selector
         $this->selector = (string) $selector;
     }
 
+    /**
+     * @param string $string
+     * @return Selector[]
+     */
+    public static function fromString($string)
+    {
+        $list = array();
+        $selectors = explode(',', $string);
+        $selectors = array_filter(array_map('trim', $selectors));
+        foreach($selectors as $selector) {
+            $list[] = new Selector($selector);
+        }
+        return $list;
+    }
+
     function __toString()
     {
         return $this->selector;

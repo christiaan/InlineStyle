@@ -24,4 +24,31 @@ final class Rule
     {
         return $this->selector->isMoreSpecificThan($b->selector);
     }
+
+    public function __toString()
+    {
+        return (string) $this->selector . '{' . $this->declarations . '}';
+    }
+
+    /**
+     * Parse the rules out of the string
+     *
+     * @param string $string
+     * @return Rule[]
+     */
+    public static function fromString($string)
+    {
+        $rules = array();
+        list($selectors, $declarations) = explode('{', trim(trim($string), '}'), 2);
+        $selectors = Selector::fromString($selectors);
+        $declarations = Declarations::fromString($declarations);
+
+        foreach ($selectors as $selector) {
+            $rules[] = new Rule(
+                $selector,
+                $declarations
+            );
+        }
+        return $rules;
+    }
 }

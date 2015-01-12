@@ -27,6 +27,22 @@ class DeclarationsTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function test_strips_comments()
+    {
+        $styles = Declarations::fromString(
+            '
+    color: red;
+    /* This is a single-line comment */
+    text-align: center;
+'
+        );
+
+        $this->assertEquals(
+            'color:red;text-align:center',
+            (string) $styles
+        );
+    }
+
     public function test_strips_unnecessary_whitespace_and_trailing_semicolons()
     {
         $this->assertEquals(
