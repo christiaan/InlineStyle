@@ -26,4 +26,17 @@ CSS
 
         );
     }
+
+    public function test_merge_two_small_stylesheets()
+    {
+        $a = OrderedStyleSheet::fromString("a {color: red;}");
+        $b = OrderedStyleSheet::fromString("a {color: blue}");
+
+        $this->assertEquals(
+            'a{color:red}
+a{color:blue}
+',
+            (string) $a->merge($b)
+        );
+    }
 }

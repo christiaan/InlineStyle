@@ -16,7 +16,7 @@ final class OrderedStyleSheet
     function __construct(array $rules)
     {
         usort($rules, function(Rule $a, Rule $b) {
-            return $a->isMoreSpecificThan($b) ? 1 : -1;
+            return $b->isMoreSpecificThan($a) ? -1 : 1;
         });
         $this->rules = $rules;
     }
@@ -37,5 +37,10 @@ final class OrderedStyleSheet
 
     }
 
-
+    public function merge(OrderedStyleSheet $other)
+    {
+        return new OrderedStyleSheet(
+            array_merge($this->rules, $other->rules)
+        );
+    }
 }
