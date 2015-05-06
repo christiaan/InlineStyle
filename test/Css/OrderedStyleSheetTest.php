@@ -39,4 +39,11 @@ a{color:blue}
             (string) $a->merge($b)
         );
     }
+
+    public function test_empty_string()
+    {
+        $stylesheet = OrderedStyleSheet::fromString('');
+
+        $this->assertEquals('', (string) $stylesheet);
+    }
 }

@@ -20,4 +20,11 @@ class RuleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('a{color:red}', (string) $rules[0]);
         $this->assertEquals('img{color:red}', (string) $rules[1]);
     }
+
+    public function test_empty_string()
+    {
+        $rules = Rule::fromString('');
+
+        $this->assertCount(0, $rules);
+    }
 }

@@ -39,6 +39,9 @@ final class Rule
     public static function fromString($string)
     {
         $rules = array();
+        if (false === strpos($string, '{')) {
+            return $rules;
+        }
         list($selectors, $declarations) = explode('{', trim(trim($string), '}'), 2);
         $selectors = Selector::fromString($selectors);
         $declarations = Declarations::fromString($declarations);
