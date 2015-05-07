@@ -25,6 +25,8 @@ namespace InlineStyle;
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+use InlineStyle\Html\Document;
+use InlineStyle\Html\ExtractStyleSheets;
 
 /**
  * Main entry class to use the InlineStyle library
@@ -32,8 +34,22 @@ namespace InlineStyle;
  */
 final class InlineStyle
 {
-    public static function inline($html)
+    /**
+     * @param string $html
+     * @param array $options
+     * @return string
+     */
+    public static function inline($html, array $options = null)
     {
-        return $html;
+        $document = new Document($html);
+
+        $extractStyleSheets = new ExtractStyleSheets(
+            $options['base'],
+            $options['devices']
+        );
+
+        $extractedDocument = $document->applyTransform($extractStyleSheets);
+
+        return (string) $extractedDocument;
     }
 }
