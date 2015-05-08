@@ -70,7 +70,7 @@ final class Declarations
         $styleB = $other->declarations;
 
         foreach ($styleB as $name => $val) {
-            if (!isset($styleA[$name]) || $this->isImportant($styleA[$name])) {
+            if (!isset($styleA[$name]) || $this->isImportant($styleB[$name])) {
                 $styleA[$name] = $val;
             }
         }
@@ -89,6 +89,6 @@ final class Declarations
         return substr(
             str_replace(' ', '', strtolower($value)),
             -10
-        ) !== '!important';
+        ) === '!important';
     }
 }
