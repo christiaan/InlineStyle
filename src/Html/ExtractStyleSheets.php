@@ -61,13 +61,13 @@ final class ExtractStyleSheets implements Transform
             // property is NULL and not the documented DOMNodeList
             if ($node->childNodes) {
                 foreach ($node->childNodes as $child) {
-                    if ($child instanceof \DOMElement && $this->isStyleSheet($child)) {
-                        $this->styleSheets[] = $this->extractStyleSheet($child);
-                        $removeQueue[] = $child;
-                    } else {
-                        $queue[] = $child;
-                    }
+                    $queue[] = $child;
                 }
+            }
+
+            if ($this->isStyleSheet($node) && $this->isForAllowedMediaDevice($node)) {
+                $this->styleSheets[] = $this->extractStyleSheet($node);
+                $removeQueue[] = $node;
             }
         }
 
@@ -78,10 +78,10 @@ final class ExtractStyleSheets implements Transform
         return $dom->saveHTML();
     }
 
-    private function isStyleSheet(\DOMElement $child)
+    private function isStyleSheet($child)
     {
-        return ($this->isStyleNode($child) || $this->isLinkNode($child)) &&
-            $this->isForAllowedMediaDevice($child);
+        return $child instanceof \DOMElement &&
+            ($this->isStyleNode($child) || $this->isLinkNode($child));
     }
 
     /**
