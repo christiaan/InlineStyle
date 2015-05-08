@@ -1,6 +1,6 @@
 InlineStyle
 ===========
-[![Build Status](https://secure.travis-ci.org/christiaan/InlineStyle.png)](http://travis-ci.org/christiaan/InlineStyle)
+[![Build Status](https://travis-ci.org/christiaan/InlineStyle.svg?branch=master)](https://travis-ci.org/christiaan/InlineStyle)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/christiaan/InlineStyle/badges/quality-score.png?s=f731e792fb2eaa305e294a1a2928e9bc96dca12b)](https://scrutinizer-ci.com/g/christiaan/InlineStyle/)
 
 InlineStyle provides an easy way to apply embedded and external stylesheets
