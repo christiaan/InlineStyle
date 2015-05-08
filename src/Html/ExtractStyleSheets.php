@@ -54,7 +54,7 @@ final class ExtractStyleSheets implements Transform
         $queue = array();
         $queue[] = $dom;
 
-        $removeQueue = [];
+        $removeQueue = array();
 
         while ($node = array_shift($queue)) {
             // The DOMDocumentType extends the DOMNode but it's childNodes
