@@ -43,4 +43,12 @@ final class OrderedStyleSheet
             array_merge($this->rules, $other->rules)
         );
     }
+
+    /**
+     * @return array|Rule[]
+     */
+    public function getRules()
+    {
+        return $this->rules;
+    }
 }

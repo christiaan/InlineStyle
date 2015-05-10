@@ -31,6 +31,22 @@ final class Rule
     }
 
     /**
+     * @return Selector
+     */
+    public function getSelector()
+    {
+        return $this->selector;
+    }
+
+    /**
+     * @return Declarations
+     */
+    public function getDeclarations()
+    {
+        return $this->declarations;
+    }
+
+    /**
      * Parse the rules out of the string
      *
      * @param string $string
