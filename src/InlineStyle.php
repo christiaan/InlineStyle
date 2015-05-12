@@ -25,6 +25,7 @@ namespace InlineStyle;
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+use InlineStyle\Html\ApplyStyleSheets;
 use InlineStyle\Html\Document;
 use InlineStyle\Html\ExtractStyleSheets;
 
@@ -48,8 +49,14 @@ final class InlineStyle
             $options['devices']
         );
 
-        $extractedDocument = $document->applyTransform($extractStyleSheets);
+        $document = $document->applyTransform($extractStyleSheets);
 
-        return (string) $extractedDocument;
+        $applyStyleSheets = new ApplyStyleSheets(
+            $extractStyleSheets->getStyleSheets()
+        );
+
+        $document = $document->applyTransform($applyStyleSheets);
+
+        return (string) $document;
     }
 }
