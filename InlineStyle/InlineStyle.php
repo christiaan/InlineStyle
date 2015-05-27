@@ -232,7 +232,7 @@ class InlineStyle
                     }
                 } else {
                     $stylesheets = array_merge($stylesheets,
-                        $this->extractStylesheets($child, $base));
+                        $this->extractStylesheets($child, $base, $devices));
                 }
             }
 
