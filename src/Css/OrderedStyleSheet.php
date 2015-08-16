@@ -24,17 +24,18 @@ final class OrderedStyleSheet
     public static function fromString($string)
     {
         $string = Comment::stripFromString($string);
-        return new OrderedStyleSheet(Rule::fromString($string));
+
+        $rules = array();
+        foreach (explode('}', $string) as $rule) {
+            $rules = array_merge($rules, Rule::fromString($rule . '}'));
+        }
+
+        return new OrderedStyleSheet($rules);
     }
 
     public function __toString()
     {
-        $string = '';
-        foreach ($this->rules as $rule) {
-            $string .= $rule . "\n";
-        }
-        return $string;
-
+        return implode("\n", array_map('strval', $this->rules));
     }
 
     public function merge(OrderedStyleSheet $other)

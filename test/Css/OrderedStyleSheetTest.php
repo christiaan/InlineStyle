@@ -19,7 +19,6 @@ a[href]{font-family:"Arvo", Courier, monospace;color:#003399}
 .class{font-family:"Arvo", Courier, monospace;color:#003399}
 #id{font-family:"Arvo", Courier, monospace;color:#003399}
 #id.class{font-family:"Arvo", Courier, monospace;color:#003399}
-
 CSS
             ,
             (string) $stylesheet
@@ -34,8 +33,7 @@ CSS
 
         $this->assertEquals(
             'a{color:red}
-a{color:blue}
-',
+a{color:blue}',
             (string) $a->merge($b)
         );
     }
@@ -45,5 +43,22 @@ a{color:blue}
         $stylesheet = OrderedStyleSheet::fromString('');
 
         $this->assertEquals('', (string) $stylesheet);
+    }
+
+    public function test_multiple_rules()
+    {
+        $stylesheet = OrderedStyleSheet::fromString('    h1{
+        color:yellow
+    }
+    p {
+        color:yellow !important;
+    }
+    p {
+        color:blue
+    }');
+
+        $this->assertEquals('h1{color:yellow}
+p{color:yellow !important}
+p{color:blue}', (string) $stylesheet);
     }
 }
