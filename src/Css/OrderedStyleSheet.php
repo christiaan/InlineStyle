@@ -23,7 +23,7 @@ final class OrderedStyleSheet
 
     public static function fromString($string)
     {
-        $string = Comment::stripFromString($string);
+        $string = UnsupportedLines::stripFromString($string);
 
         $rules = array();
         foreach (explode('}', $string) as $rule) {

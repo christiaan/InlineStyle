@@ -61,4 +61,21 @@ a{color:blue}',
 p{color:yellow !important}
 p{color:blue}', (string) $stylesheet);
     }
+
+    public function test_does_not_include_keyframes()
+    {
+        $stylesheet = OrderedStyleSheet::fromString('    h1{
+        color:yellow
+    }
+    @-webkit-keyframes test {
+  from {
+    background-position: 40px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}');
+
+        $this->assertEquals('h1{color:yellow}', (string) $stylesheet);
+    }
 }

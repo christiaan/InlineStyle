@@ -24,7 +24,7 @@ final class Declarations
      */
     public static function fromString($string)
     {
-        $string = Comment::stripFromString($string);
+        $string = UnsupportedLines::stripFromString($string);
         $string = explode(';', $string);
         $string = array_filter(array_map('trim', $string));
 
