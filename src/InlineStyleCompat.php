@@ -30,9 +30,13 @@ final class InlineStyleCompat
 
     public function applyStyleSheet($string)
     {
-        $stylesheet = OrderedStyleSheet::fromString($string);
         $applyStylesheets = new ApplyStyleSheets(
-            array($stylesheet)
+            array_map(
+                function ($string) {
+                    return OrderedStyleSheet::fromString($string);
+                },
+                (array) $string
+            )
         );
 
         $this->document = $this->document->applyTransform($applyStylesheets);

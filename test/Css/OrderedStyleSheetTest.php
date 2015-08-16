@@ -78,4 +78,27 @@ p{color:blue}', (string) $stylesheet);
 
         $this->assertEquals('h1{color:yellow}', (string) $stylesheet);
     }
+
+    public function test_multiple_rules_are_ordered_on_specificity()
+    {
+        $stylesheet = OrderedStyleSheet::fromString(
+            'p {
+    color: red;
+}
+
+p.p2 {
+    color: green;
+}
+
+.p2 {
+    color: blue;
+}
+
+'
+        );
+
+        $this->assertEquals('p{color:red}
+.p2{color:blue}
+p.p2{color:green}', (string) $stylesheet);
+    }
 }

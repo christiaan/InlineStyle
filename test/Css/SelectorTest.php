@@ -38,7 +38,11 @@ class SelectorTest extends \PHPUnit_Framework_TestCase
             array(
                 new Selector('#id'),
                 new Selector('tag')
-            )
+            ),
+            array(
+                new Selector('p.p2'),
+                new Selector('p')
+            ),
         );
     }
 }

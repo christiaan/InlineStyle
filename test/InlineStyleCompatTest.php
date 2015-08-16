@@ -66,38 +66,17 @@ class InlineStyleCompatTest extends \PHPUnit_Framework_TestCase
             $stylesheets
         );
     }
-//
-//    public function testApplyExtractedStylesheet()
-//    {
-//        $stylesheets = $this->object->extractStylesheets(null, $this->basedir);
-//        $this->object->applyStylesheet($stylesheets);
-//
-//        $this->assertEquals(
-//            file_get_contents($this->basedir."/testApplyExtractedStylesheet.html"),
-//            $this->object->getHTML());
-//    }
-//
-//    public function testParseStyleSheet()
-//    {
-//        $parsed = $this->object->parseStylesheet("p:not(.p2) { color: red }");
-//        $this->assertEquals(
-//            array(array("p:not(.p2)", "color: red")),
-//            $parsed);
-//    }
-//
-//    public function testParseStyleSheetWithComments()
-//    {
-//        $parsed = $this->object->parseStylesheet("p:not(.p2) { /* blah */ color: red }");
-//        $this->assertEquals(
-//            array(array("p:not(.p2)", "color: red")),
-//            $parsed);
-//    }
-//
-//    public function testIllegalXmlUtf8Chars()
-//    {
-//        // check an exception is not thrown when loading up illegal XML UTF8 chars
-//        new InlineStyle("<html><body>".chr(2).chr(3).chr(4).chr(5)."</body></html>");
-//    }
+
+    public function testApplyExtractedStylesheet()
+    {
+        $stylesheets = $this->object->extractStylesheets(null, $this->basedir);
+        $this->object->applyStylesheet($stylesheets);
+
+        $this->assertEquals(
+            file_get_contents($this->basedir."/testApplyExtractedStylesheet.html"),
+            $this->object->getHTML());
+    }
+
 //
 //    public function testGetScoreForSelector()
 //    {
@@ -171,109 +150,55 @@ class InlineStyleCompatTest extends \PHPUnit_Framework_TestCase
 //        ), $parsed);
 //    }
 //
-//    function testApplyStylesheetObeysSpecificity()
-//    {
-//        $this->object->applyStylesheet(<<<CSS
-//p {
-//    color: red;
-//}
-//
-//.p2 {
-//    color: blue;
-//}
-//
-//p.p2 {
-//    color: green;
-//}
-//
-//CSS
-//);
-//        $this->assertEquals(
-//            file_get_contents($this->basedir."/testApplyStylesheetObeysSpecificity.html"),
-//            $this->object->getHTML());
-//    }
-//
-//    function testDocDocumentDirectly()
-//    {
-//        $dom = new \DOMDocument();
-//        $dom->formatOutput = false;
-//        $dom->loadHTML('<!doctype html><html><body><div></div></body></html>');
-//
-//        $this->object->loadDomDocument($dom);
-//
-//        $this->object->applyRule('div', 'color: red');
-//
-//        $this->assertEquals('<!DOCTYPE html>
-//<html><body><div style="color: red"></div></body></html>
-//', $dom->saveHTML());
-//    }
-//
-//    /**
-//     * Regression test for #14 Selectors are sometimes sorted into the wrong cascading order
-//     */
-//    function testSortingOnSpecifitySameSpecificity()
-//    {
-//        $parsed = $this->object->parseStylesheet(<<<CSS
-//ul {
-//    color: blue;
-//}
-//
-//ul.class {
-//    color: green;
-//}
-//
-//ul {
-//    color: red;
-//}
-//CSS
-//        );
-//
-//        $parsed = $this->object->sortSelectorsOnSpecificity($parsed);
-//
-//        $this->assertEquals(array(
-//                array(
-//                    'ul',
-//                    'color: blue'
-//                ),
-//                array(
-//                    'ul',
-//                    'color: red'
-//                ),
-//                array(
-//                    'ul.class',
-//                    'color: green'
-//                ),
-//            ), $parsed);
-//    }
-//
-//    function testNonWorkingPseudoSelectors()
-//    {
-//        // Regressiontest for #5
-//        $this->object->applyStylesheet(<<<CSS
-//ul#nav li.active a:link, body.ie7 .col_3:visited h2 ~ h2 {
-//    color: blue;
-//}
-//
-//ul > li ul li:active ol li:first-letter {
-//    color: red;
-//}
-//CSS
-//        );
-//    }
-//
-//    /**
-//     * Regression tests for #10 _styleToArray crashes when presented with an invalid property name
-//     */
-//    function testInvalidCssProperties()
-//    {
-//        $this->object->applyStylesheet(<<<CSS
-//ul {
-//    asohdtoairet;
-//    garbage: )&%)*(%);
-//}
-//CSS
-//);
-//    }
+    function testApplyStylesheetObeysSpecificity()
+    {
+        $this->object->applyStylesheet(<<<CSS
+p {
+    color: red;
+}
+
+.p2 {
+    color: blue;
+}
+
+p.p2 {
+    color: green;
+}
+CSS
+);
+        $this->assertEquals(
+            file_get_contents($this->basedir."/testApplyStylesheetObeysSpecificity.html"),
+            $this->object->getHTML());
+    }
+
+    function testNonWorkingPseudoSelectors()
+    {
+        // Regressiontest for #5
+        $this->object->applyStylesheet(<<<CSS
+ul#nav li.active a:link, body.ie7 .col_3:visited h2 ~ h2 {
+    color: blue;
+}
+
+ul > li ul li:active ol li:first-letter {
+    color: red;
+}
+CSS
+        );
+    }
+
+    /**
+     * Regression tests for #10 _styleToArray crashes when presented with an invalid property name
+     */
+    function testInvalidCssProperties()
+    {
+        $this->object->applyStylesheet(<<<CSS
+ul {
+    asohdtoairet;
+    garbage: )&%)*(%);
+}
+CSS
+);
+    }
 //
 //    function testRegression24() {
 //        $content = '<p style="text-align:center;">Hello World!</p>';

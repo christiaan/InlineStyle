@@ -16,11 +16,11 @@ final class ApplyStyleSheets implements Transform
     /**
      * @var OrderedStyleSheet
      */
-    private $styleSheets;
+    private $styleSheet;
 
     public function __construct($styleSheets)
     {
-        $this->styleSheets = array();
+        $this->styleSheet = new OrderedStyleSheet(array());
         foreach ($styleSheets as $styleSheet) {
             $this->addStyleSheet($styleSheet);
         }
@@ -29,7 +29,7 @@ final class ApplyStyleSheets implements Transform
 
     private function addStyleSheet(OrderedStyleSheet $styleSheet)
     {
-        $this->styleSheets[] = $styleSheet;
+        $this->styleSheet = $this->styleSheet->merge($styleSheet);
     }
 
     /**
@@ -48,7 +48,7 @@ final class ApplyStyleSheets implements Transform
 
         $this->saveOriginalStyles($dom);
 
-        $this->applyAllStyleSheets($dom);
+        $this->applyStyleSheet($dom);
 
         $this->restoreOriginalStyles($dom);
 
@@ -88,22 +88,11 @@ final class ApplyStyleSheets implements Transform
     }
 
     /**
-     * @param \DOMDocument $dom
-     */
-    private function applyAllStyleSheets(\DOMDocument $dom)
-    {
-        foreach ($this->styleSheets as $styleSheet) {
-            $this->applyStyleSheet($styleSheet, $dom);
-        }
-    }
-
-    /**
-     * @param OrderedStyleSheet $styleSheet
      * @param \DOMDocument $document
      */
-    private function applyStyleSheet(OrderedStyleSheet $styleSheet, \DOMDocument $document)
+    private function applyStyleSheet(\DOMDocument $document)
     {
-        foreach ($styleSheet->getRules() as $rule) {
+        foreach ($this->styleSheet->getRules() as $rule) {
             $this->applyRule($rule, $document);
         }
     }
@@ -120,7 +109,7 @@ final class ApplyStyleSheets implements Transform
 
             $node->setAttribute(
                 'style',
-                $current->merge($rule->getDeclarations())
+                $rule->getDeclarations()->merge($current)
             );
         }
     }
