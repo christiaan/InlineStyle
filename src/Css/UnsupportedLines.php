@@ -7,6 +7,12 @@ namespace InlineStyle\Css;
  */
 final class UnsupportedLines
 {
+    /**
+     * Strip unsupported lines from the string
+     *
+     * @param string $string
+     * @return string
+     */
     public static function stripFromString($string)
     {
         // strip keyframes rules

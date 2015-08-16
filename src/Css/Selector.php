@@ -7,9 +7,13 @@ namespace InlineStyle\Css;
  */
 final class Selector
 {
+    /** @type string */
     private $selector;
 
-    function __construct($selector)
+    /**
+     * @param string $selector a single selector
+     */
+    public function __construct($selector)
     {
         if (strpos($selector, ',') !== false) {
             throw new \InvalidArgumentException('Selector contains a , which is not allowed');
@@ -23,16 +27,18 @@ final class Selector
      */
     public static function fromString($string)
     {
-        $list = array();
         $selectors = explode(',', $string);
         $selectors = array_filter(array_map('trim', $selectors));
-        foreach($selectors as $selector) {
-            $list[] = new Selector($selector);
-        }
-        return $list;
+
+        return array_map(
+            function ($selector) {
+                return new Selector($selector);
+            },
+            $selectors
+        );
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->selector;
     }

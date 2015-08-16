@@ -8,6 +8,7 @@ namespace InlineStyle\Css;
  */
 final class Declarations
 {
+    /** @type array */
     private $declarations;
 
     /**
@@ -19,7 +20,7 @@ final class Declarations
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @return Declarations
      */
     public static function fromString($string)

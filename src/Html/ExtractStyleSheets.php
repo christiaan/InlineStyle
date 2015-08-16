@@ -9,12 +9,12 @@ use InlineStyle\Css\OrderedStyleSheet;
  */
 final class ExtractStyleSheets implements Transform
 {
-    /** @var array */
-    private $devices;
-    /** @var OrderedStyleSheet[] */
-    private $styleSheets;
-    /** @var string */
+    /** @type string */
     private $base;
+    /** @type array */
+    private $devices;
+    /** @type OrderedStyleSheet[] */
+    private $styleSheets;
 
     /**
      * @param string $base The base URI for relative stylesheets
@@ -22,9 +22,9 @@ final class ExtractStyleSheets implements Transform
      */
     public function __construct($base, $devices = array('all', 'screen', 'handheld'))
     {
+        $this->base = $base;
         $this->devices = $devices;
         $this->styleSheets = array();
-        $this->base = $base;
     }
 
     /**
@@ -123,9 +123,14 @@ final class ExtractStyleSheets implements Transform
         $mediaDevices = array_map('trim', $mediaDevices);
         $mediaDevices = array_filter($mediaDevices);
 
-        return !$mediaDevices || (bool) array_intersect($this->devices, $mediaDevices);
+        return empty($mediaDevices) ||
+            count(array_intersect($this->devices, $mediaDevices)) > 0;
     }
 
+    /**
+     * @param string $href
+     * @return OrderedStyleSheet
+     */
     private function createExternal($href)
     {
         if ($this->base && false === strpos($href, "://")) {

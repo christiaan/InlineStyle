@@ -7,7 +7,9 @@ namespace InlineStyle\Css;
  */
 final class Rule
 {
+    /** @type Selector */
     private $selector;
+    /** @type Declarations */
     private $declarations;
 
     /**
@@ -20,6 +22,10 @@ final class Rule
         $this->declarations = $declarations;
     }
 
+    /**
+     * @param Rule $b
+     * @return bool
+     */
     public function isMoreSpecificThan(Rule $b)
     {
         return $this->selector->isMoreSpecificThan($b->selector);
@@ -54,20 +60,15 @@ final class Rule
      */
     public static function fromString($string)
     {
-        $rules = array();
         if (false === strpos($string, '{')) {
-            return $rules;
+            return array();
         }
         list($selectors, $declarations) = explode('{', trim(trim($string), '}'), 2);
         $selectors = Selector::fromString($selectors);
         $declarations = Declarations::fromString($declarations);
 
-        foreach ($selectors as $selector) {
-            $rules[] = new Rule(
-                $selector,
-                $declarations
-            );
-        }
-        return $rules;
+        return array_map(function(Selector $selector) use($declarations) {
+            return new Rule($selector, $declarations);
+        }, $selectors);
     }
 }

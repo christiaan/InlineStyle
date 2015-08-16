@@ -7,10 +7,10 @@ use InlineStyle\InlineStyleCompat;
 class InlineStyleCompatTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \InlineStyle\InlineStyleCompat
+     * @type \InlineStyle\InlineStyleCompat
      */
-    protected $object;
-    protected $basedir;
+    private $object;
+    private $basedir;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -73,7 +73,7 @@ class InlineStyleCompatTest extends \PHPUnit_Framework_TestCase
             $this->object->getHTML());
     }
 
-    function testApplyStylesheetObeysSpecificity()
+    public function testApplyStylesheetObeysSpecificity()
     {
         $this->object->applyStylesheet(<<<CSS
 p {
@@ -94,7 +94,7 @@ CSS
             $this->object->getHTML());
     }
 
-    function testNonWorkingPseudoSelectors()
+    public function testNonWorkingPseudoSelectors()
     {
         // Regressiontest for #5
         $this->object->applyStylesheet(<<<CSS
@@ -112,7 +112,7 @@ CSS
     /**
      * Regression tests for #10 _styleToArray crashes when presented with an invalid property name
      */
-    function testInvalidCssProperties()
+    public function testInvalidCssProperties()
     {
         $this->object->applyStylesheet(<<<CSS
 ul {
@@ -123,7 +123,7 @@ CSS
 );
     }
 
-    function testRegression24() {
+    public function testRegression24() {
         $content = '<p style="text-align:center;">Hello World!</p>';
         $htmldoc = new InlineStyleCompat($content);
         $htmldoc->applyStylesheet('p{
@@ -143,7 +143,7 @@ HTML;
         $this->assertEquals($expected, $htmldoc->getHTML());
     }
 
-    function testMultipleStylesheets28() {
+    public function testMultipleStylesheets28() {
         $htmldoc = new InlineStyleCompat(file_get_contents($this->basedir . '/testMultipleStylesheets.html'));
         $htmldoc->applyStylesheet($htmldoc->extractStylesheets(null, $this->basedir));
         $expected = <<<HTML
@@ -161,7 +161,7 @@ HTML;
         $this->assertEquals($expected, $htmldoc->getHTML());
     }
 
-    function testMediaStylesheets31() {
+    public function testMediaStylesheets31() {
         $htmldoc = new InlineStyleCompat(file_get_contents($this->basedir . '/testMediaStylesheets31.html'));
         $htmldoc->applyStylesheet($htmldoc->extractStylesheets(null, $this->basedir));
         $expected = <<<HTML
@@ -183,7 +183,7 @@ HTML;
         $this->assertEquals($expected, $htmldoc->getHTML());
     }
 
-    function testLinkedMediaStylesheets31() {
+    public function testLinkedMediaStylesheets31() {
         $htmldoc = new InlineStyleCompat(file_get_contents($this->basedir . '/testLinkedMediaStylesheets31.html'));
         $htmldoc->applyStylesheet($htmldoc->extractStylesheets(null, $this->basedir));
         $expected = <<<HTML

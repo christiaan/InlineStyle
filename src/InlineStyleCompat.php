@@ -12,9 +12,12 @@ use InlineStyle\Html\ExtractStyleSheets;
  */
 final class InlineStyleCompat
 {
-    /** @var Document */
+    /** @type Document */
     private $document;
 
+    /**
+     * @param string $html
+     */
     public function __construct($html)
     {
         if (strlen($html) <= PHP_MAXPATHLEN && file_exists($html)) {
@@ -28,6 +31,10 @@ final class InlineStyleCompat
         return (string) $this->document;
     }
 
+    /**
+     * @param string|array $string
+     * @return InlineStyleCompat
+     */
     public function applyStyleSheet($string)
     {
         $applyStylesheets = new ApplyStyleSheets(
@@ -44,6 +51,11 @@ final class InlineStyleCompat
         return $this;
     }
 
+    /**
+     * @param string $selector
+     * @param string $declaration
+     * @return InlineStyleCompat
+     */
     public function applyRule($selector, $declaration)
     {
         $this->applyStyleSheet($selector . '{' . $declaration . '}');
@@ -51,7 +63,13 @@ final class InlineStyleCompat
         return $this;
     }
 
-    public function extractStylesheets(Document $document = null, $basedir, $devices = array('all', 'screen', 'handheld'))
+    /**
+     * @param null $context deprecated cannot be used anymore
+     * @param string $basedir
+     * @param array $devices
+     * @return array
+     */
+    public function extractStylesheets($context, $basedir, $devices = array('all', 'screen', 'handheld'))
     {
         $extractStyleSheets = new ExtractStyleSheets(
             $basedir,

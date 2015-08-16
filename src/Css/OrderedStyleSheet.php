@@ -7,13 +7,13 @@ namespace InlineStyle\Css;
  */
 final class OrderedStyleSheet
 {
-    /** @var Rule[] */
+    /** @type Rule[] */
     private $rules;
 
     /**
      * @param Rule[] $rules
      */
-    function __construct(array $rules)
+    public function __construct(array $rules)
     {
         usort($rules, function(Rule $a, Rule $b) {
             return $b->isMoreSpecificThan($a) ? -1 : 1;

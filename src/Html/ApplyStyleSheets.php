@@ -14,22 +14,19 @@ use Symfony\Component\CssSelector\Exception\ParseException;
 final class ApplyStyleSheets implements Transform
 {
     /**
-     * @var OrderedStyleSheet
+     * @type OrderedStyleSheet
      */
     private $styleSheet;
 
+    /**
+     * @param OrderedStyleSheet[] $styleSheets
+     */
     public function __construct($styleSheets)
     {
         $this->styleSheet = new OrderedStyleSheet(array());
         foreach ($styleSheets as $styleSheet) {
             $this->addStyleSheet($styleSheet);
         }
-
-    }
-
-    private function addStyleSheet(OrderedStyleSheet $styleSheet)
-    {
-        $this->styleSheet = $this->styleSheet->merge($styleSheet);
     }
 
     /**
@@ -53,6 +50,11 @@ final class ApplyStyleSheets implements Transform
         $this->restoreOriginalStyles($dom);
 
         return $dom->saveHTML();
+    }
+
+    private function addStyleSheet(OrderedStyleSheet $styleSheet)
+    {
+        $this->styleSheet = $this->styleSheet->merge($styleSheet);
     }
 
     /**

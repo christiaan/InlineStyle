@@ -7,6 +7,7 @@ namespace InlineStyle\Html;
  */
 final class Document
 {
+    /** @type string */
     private $html;
 
     /**
