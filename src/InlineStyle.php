@@ -40,12 +40,18 @@ final class InlineStyle
      * @param array $options
      * @return string
      */
-    public static function inline($html, array $options = null)
+    public static function inline($html, array $options = array())
     {
         $document = new Document($html);
 
+        $defaultOptions = array(
+            'baseUrl' => '',
+            'devices' => array('all', 'screen', 'handheld')
+        );
+        $options = array_replace($defaultOptions, $options);
+
         $extractStyleSheets = new ExtractStyleSheets(
-            $options['base'],
+            $options['baseUrl'],
             $options['devices']
         );
 
