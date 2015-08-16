@@ -24,8 +24,6 @@ The library has one simple exposed api the `InlineStyle::inline(string $html, ar
 
 ```php
 $inlinedHtml = InlineStyle::inline($html, [
-  'formatOutput' => true,
-  'charset' => 'utf8',
   'devices' => ['all', 'screen', 'handheld'],
   'baseUrl' => 'http://example.com'
 ]);
@@ -35,7 +33,5 @@ The options that can be passed to the inline method
 
 | Name | default value | description |
 |------------------------------------|
-| formatOutput | true | Nicely formats output with indentation and extra space. |
-| charset | utf8 | input character set, output is always utf8 |
 | devices | ['all', 'screen', 'handheld'] | allowed media devices, styles for other devices are ignored |
 | baseUrl | '' | relative links are relative to this url |
