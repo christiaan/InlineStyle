@@ -198,9 +198,11 @@ class InlineStyle
      *
      * @param \DOMNode $node leave empty to extract from the whole document
      * @param string $base The base URI for relative stylesheets
+     * @param array $devices Considered devices
+     * @param boolean $remove Should it remove the original stylesheets
      * @return array the extracted stylesheets
      */
-    public function extractStylesheets($node = null, $base = '', $devices = array('all', 'screen', 'handheld'))
+    public function extractStylesheets($node = null, $base = '', $devices = array('all', 'screen', 'handheld'), $remove = true)
     {
         if(null === $node) {
             $node = $this->_dom;
@@ -232,12 +234,14 @@ class InlineStyle
                     }
                 } else {
                     $stylesheets = array_merge($stylesheets,
-                        $this->extractStylesheets($child, $base));
+                        $this->extractStylesheets($child, $base, $devices, $remove));
                 }
             }
 
-            foreach ($removeQueue as $child) {
-                $child->parentNode->removeChild($child);
+            if ($remove) {
+                foreach ($removeQueue as $child) {
+                    $child->parentNode->removeChild($child);
+                }
             }
         }
 
