@@ -128,11 +128,11 @@ class InlineStyle
     private function _getNodesForCssSelector($sel)
     {
         try {
-            if (class_exists('Symfony\Component\CssSelector\CssSelector')) {
-                $xpathQuery = \Symfony\Component\CssSelector\CssSelector::toXPath($sel);
-            } else {
+            if (class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
                 $converter = new \Symfony\Component\CssSelector\CssSelectorConverter(true);
                 $xpathQuery = $converter->toXPath($sel);
+            } else {
+                $xpathQuery = \Symfony\Component\CssSelector\CssSelector::toXPath($sel);
             }
 
             return $this->_getDomXpath()->query($xpathQuery);
