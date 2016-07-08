@@ -9,13 +9,26 @@ cache:
   paths:
   - vendor/
 
-# We test PHP5.6
+test:5.3:
+  image: php:5.3
+  script:
+  - phpunit --configuration phpunit.xml.dist
+
+test:5.4:
+  image: php:5.4
+  script:
+  - phpunit --configuration phpunit.xml.dist
+
+test:5.5:
+  image: php:5.5
+  script:
+  - phpunit --configuration phpunit.xml.dist
+
 test:5.6:
   image: php:5.6
   script:
   - phpunit --configuration phpunit.xml.dist
 
-# We test PHP7.0
 test:7.0:
   image: php:7.0
   script:
