@@ -10,7 +10,7 @@ cache:
   - vendor/
 
 test:5.3:
-  image: php:5.3
+  image: tomsowerby/php-5.3:cli
   script:
   - vendor/bin/phpunit --configuration phpunit.xml.dist
 
