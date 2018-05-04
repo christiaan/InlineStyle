@@ -103,7 +103,7 @@ class InlineStyle
     /**
      * Applies one or more stylesheets to the current document
      *
-     * @param string $stylesheet
+     * @param string|string[] $stylesheet
      * @return InlineStyle self
      */
     public function applyStylesheet($stylesheet)
