@@ -1,5 +1,5 @@
 {
-    "name": "inlinestyle/inlinestyle",
+    "name": "codeat3/inlinestyle",
     "type": "library",
     "description": "Apply CSS stylesheets directly as inline styles to a HTML document",
     "keywords": ["css", "email", "inline"],

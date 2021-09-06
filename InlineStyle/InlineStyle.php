@@ -170,6 +170,24 @@ class InlineStyle
         return $this;
     }
 
+    public function getDomObject() {
+        $clone = clone $this;
+        foreach ($clone->_getNodesForCssSelector('[inlinestyle-original-style]') as $node) {
+            $current = $node->hasAttribute("style") ?
+                $this->_styleToArray($node->getAttribute("style")) :
+                array();
+            $original = $node->hasAttribute("inlinestyle-original-style") ?
+                $this->_styleToArray($node->getAttribute("inlinestyle-original-style")) :
+                array();
+
+            $current = $clone->_mergeStyles($current, $original);
+
+            $node->setAttribute("style", $this->_arrayToStyle($current));
+            $node->removeAttribute('inlinestyle-original-style');
+        }
+        return $clone->_dom;
+    }
+
     /**
      * Returns the DOMDocument as html
      *
@@ -380,7 +398,7 @@ class InlineStyle
     {
         // strip comments
         $s = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!','', $s);
-        
+
         // strip keyframes rules
         $s = preg_replace('/@[-|keyframes].*?\{.*?\}[ \r\n]*\}/s', '', $s);
 
