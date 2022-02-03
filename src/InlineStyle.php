@@ -1,5 +1,5 @@
 <?php
-namespace InlineStyle;
+namespace Codeat3\InlineStyle;
 
 /*
  * InlineStyle MIT License

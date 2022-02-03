@@ -13,7 +13,7 @@
 >
     <testsuites>
         <testsuite name="InlineStyle Test Suite">
-            <directory>InlineStyle</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
