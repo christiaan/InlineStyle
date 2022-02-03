@@ -6,6 +6,12 @@ InlineStyle
 <a href="https://scrutinizer-ci.com/g/codeatt/InlineStyle/">
     <img src="https://scrutinizer-ci.com/g/christiaan/InlineStyle/badges/quality-score.png?s=f731e792fb2eaa305e294a1a2928e9bc96dca12b" alt="Scrutinizer Quality Score" />
 </a>
+<a href="https://packagist.org/packages/codeat3/inlinestyle">
+    <img src="https://img.shields.io/packagist/v/codeat3/inlinestyle" alt="Latest Stable Version">
+</a>
+<a href="https://packagist.org/packages/codeat3/inlinestyle">
+    <img src="https://img.shields.io/packagist/dt/codeat3/inlinestyle" alt="Total Downloads">
+</a>
 
 This is a fork of the original repository (christiaan/InlineStyle)[https://github.com/christiaan/InlineStyle] by [Christiaan Baartse
 ](https://github.com/christiaan)
